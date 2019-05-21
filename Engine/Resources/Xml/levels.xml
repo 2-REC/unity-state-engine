@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<levels>
+
+  <level id="1" name="Level 1" scene="Level1" beginAnim="begin_anim_1" endAnim="end_anim_1" startup="true">
+    <next>
+      <nextLevel id="2"/>
+    </next>
+  </level>
+
+  <level id="2" name="Level 2" scene="Level2" beginAnim="begin_anim_2" endAnim="end_anim_2">
+    <next>
+      <nextLevel id="3"/>
+    </next>
+  </level>
+
+  <level id="3" name="Level 3" scene="TestLevel"/>
+
+</levels>

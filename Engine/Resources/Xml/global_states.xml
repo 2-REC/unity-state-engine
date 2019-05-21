@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graph>
+    <state id="LOGO" scene="Logo" next="INTRO"/>
+    <state id="INTRO" scene="Intro" next="MENU"/>
+    <state id="MENU" scene="Menu" next="QUIT">
+        <children>
+            <child id="NEW_GAME"/>
+            <child id="LOAD_GAME"/>
+            <child id="OPTIONS"/>
+            <child id="CREDITS"/>
+        </children>
+    </state>
+    <state id="NEW_GAME" scene="NewGame"/>
+    <state id="LOAD_GAME" scene="LoadGame"/>
+    <state id="OPTIONS" scene="Options"/>
+    <state id="CREDITS" scene="Credits"/>
+    <state id="QUIT" scene="Quit"/>
+</graph>

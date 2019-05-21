@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<values>
+    <common>
+        <field name="POINTS" value="0" />
+        <field name="HEALTH" value="100" />
+    </common>
+    <difficulty lives="5" continues="2" />
+    <difficulty lives="3" continues="1" />
+    <difficulty lives="1" continues="0" />
+</values>

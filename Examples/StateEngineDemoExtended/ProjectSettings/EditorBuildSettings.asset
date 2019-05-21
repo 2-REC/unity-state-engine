@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Global/Logo.unity
+    guid: b00828ab1846e4048ae5ce5ebae83c66
+  - enabled: 1
+    path: Assets/Scenes/Global/Intro.unity
+    guid: 2e2da950b67285d42947a96d9797ff0e
+  - enabled: 1
+    path: Assets/Scenes/Global/Menu.unity
+    guid: 63034fee4d8f7014d912711db6fba016
+  - enabled: 1
+    path: Assets/Scenes/Global/NewGame.unity
+    guid: 452295b7c76c55747875f040959902b3
+  - enabled: 1
+    path: Assets/Scenes/Global/LoadGame.unity
+    guid: fde611878ce55f14db8090f8295aaa45
+  - enabled: 1
+    path: Assets/Scenes/Global/Options.unity
+    guid: 45c0c77e3d9041a478307b47daf24b35
+  - enabled: 1
+    path: Assets/Scenes/Global/Credits.unity
+    guid: 63a3258a463ceba41b0dbc1decdeae4d
+  - enabled: 1
+    path: Assets/Scenes/Global/Quit.unity
+    guid: 2c5d77d2e10c7cd4186089e84d1bcec1
+  - enabled: 1
+    path: Assets/Scenes/Game/GameIntro.unity
+    guid: b45f376764d2c8943aabe80a5d0394dd
+  - enabled: 1
+    path: Assets/Scenes/Game/Map.unity
+    guid: 353ea8c51b739db40ae3bc63807e15e9
+  - enabled: 1
+    path: Assets/Scenes/Game/BeginAnim.unity
+    guid: d1a93b94d20dac947adf0f1006dbe76a
+  - enabled: 1
+    path: Assets/Scenes/Game/Briefing.unity
+    guid: 8ea0905145eeb3948904efe62009c333
+  - enabled: 1
+    path: Assets/Scenes/Game/Level1.unity
+    guid: df68414d49c17be42a08aabdb6e15ec9
+  - enabled: 1
+    path: Assets/Scenes/Game/Level2.unity
+    guid: d3d81f434c91bd247a3685f9028a7752
+  - enabled: 1
+    path: Assets/Scenes/Game/EndAnim.unity
+    guid: 9c96541c4a7b3904e9d4314da379b9e9
+  - enabled: 1
+    path: Assets/Scenes/Game/EndAnimFail.unity
+    guid: 1723de70ce734414a9e00dceda0415c8
+  - enabled: 1
+    path: Assets/Scenes/Game/Debriefing.unity
+    guid: fde856580c150a240a23c4b6ebf6580c
+  - enabled: 1
+    path: Assets/Scenes/Game/DebriefingFail.unity
+    guid: 16c64c8b29efd114688265e0a0cdffa2
+  - enabled: 1
+    path: Assets/Scenes/Game/GameEnd.unity
+    guid: c827e4d0550346346878a46490276d7b
+  - enabled: 1
+    path: Assets/Scenes/Game/GameOver.unity
+    guid: 06f86f0b3fc0c6344a61d58707b94d69
+  - enabled: 1
+    path: Assets/Scenes/Game/Continue.unity
+    guid: 622caa3f6f9b0a6458502bcf2722cbee
+  - enabled: 1
+    path: Assets/Scenes/Game/GameCredits.unity
+    guid: 89f4b90e02317744c88f9b2b8979f990
+  - enabled: 1
+    path: Assets/Scenes/Game/GameQuit.unity
+    guid: 1dc6ac7fe9f917a40b766bda49b40e67
+  m_configObjects: {}

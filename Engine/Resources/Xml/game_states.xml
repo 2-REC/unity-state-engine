@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graph>
+
+  <state id="GAME_INTRO" scene="GameIntro" next="MAP"/>
+  <state id="MAP" scene="Map">
+    <children>
+      <child id="BEGIN_ANIM"/>
+    </children>
+  </state>
+  <state id="BEGIN_ANIM" scene="BeginAnim" next="BRIEFING"/>
+  <state id="BRIEFING" scene="Briefing" next="LEVEL"/>
+  <state id="LEVEL" restartable="false" isLevel="true">
+    <children>
+      <child id="END_ANIM"/>
+      <child id="END_ANIM_FAIL"/>
+    </children>
+  </state>
+
+  <state id="END_ANIM" scene="EndAnim" next="DEBRIEFING"/>
+  <state id="DEBRIEFING" scene="Debriefing" restartable="false">
+    <children>
+      <child id="GAME_END"/>
+    </children>
+  </state>
+
+  <state id="END_ANIM_FAIL" scene="EndAnimFail" next="DEBRIEFING_FAIL"/>
+  <state id="DEBRIEFING_FAIL" scene="DebriefingFail" restartable="false">
+    <children>
+      <child id="GAME_OVER"/>
+    </children>
+  </state>
+
+  <state id="GAME_END" scene="GameEnd" next="CREDITS"/>
+  <state id="CREDITS" scene="GameCredits" next="QUIT"/>
+
+  <state id="GAME_OVER" scene="GameOver" next="CONTINUE">
+    <children>
+      <child id="QUIT"/>
+    </children>
+  </state>
+  <state id="CONTINUE" scene="Continue" restartable="false">
+    <children>
+      <child id="QUIT"/>
+    </children>
+  </state>
+
+  <state id="QUIT" scene="GameQuit"/>
+
+</graph>

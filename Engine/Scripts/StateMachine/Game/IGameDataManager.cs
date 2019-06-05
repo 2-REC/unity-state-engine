@@ -1,32 +1,23 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections.Generic;
 
-public abstract class GameDataManager : MonoBehaviour {
+public abstract class IGameDataManager : IDataManager {
 
+//TODO: move somewhere else?
     private const string GRAPH_LEVELS = "Xml/levels";
 
-    // list of all levels (Dictionary<int, LevelNode>)
+    // list of all levels
     private Dictionary<int, LevelNode> levels;
-    // list of available levels & their status (Dictionary<levelId, status>)
+    // list of available levels & their status
     private Dictionary<int, bool> availableLevels = new Dictionary<int, bool>();
 
     private int currentLevel = -1;
     private int lives = -1;
     private int continues = -1;
 
-    private bool loaded = false;
 
-
-    void Awake() {
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    public void Load() {
-        if (loaded) {
-            return;
-        }
-
+    // Get game data
+    protected override void LoadData() {
         currentLevel = GameSessionManager.GetLevel();
         Debug.Log("GameDataManager:Load - level: " + currentLevel);
 
@@ -38,7 +29,7 @@ public abstract class GameDataManager : MonoBehaviour {
         Debug.Log("GameDataManager:Load - lives: " + lives);
         Debug.Log("GameDataManager:Load - continues: " + continues);
 
-        levels = GameLoader.LoadLevelGraph(GRAPH_LEVELS);
+        levels = GameGraphLoader.LoadLevelGraph(GRAPH_LEVELS);
 
         foreach (KeyValuePair<int, LevelNode> level in levels) {
             if (GameSessionManager.IsLevelCompleted(level.Key)) {
@@ -63,9 +54,26 @@ Debug.Log("levels:");
 */
 
         SetLevels();
-
-        loaded = true;
     }
+
+    // Save game data
+    public override void CommitChanges() {
+        // update game values
+        GameSessionManager.SetLives(lives);
+        GameSessionManager.SetContinues(continues);
+
+        CommitChangesSpecifics();
+
+        GameSessionManager.SetLevel(currentLevel);
+
+        foreach (KeyValuePair<int, LevelNode> level in levels) {
+            if (level.Value.completed) {
+                GameSessionManager.SetLevelCompleted(level.Key);
+            }
+        }
+        GameSessionManager.Save();
+    }
+
 
     private void SetLevels() {
         foreach (KeyValuePair<int, LevelNode> level in levels) {
@@ -108,7 +116,7 @@ Debug.Log("levels:");
         }
     }
 
-    public void Leave() {
+    public override void Leave() {
         if (currentLevel == -1) {
             GameSessionManager.Clear();
         }
@@ -193,32 +201,13 @@ Debug.Log("levels:");
         return (continues > 0);
     }
 
-    public void CommitChanges() {
-        // update game values
-        GameSessionManager.SetLives(lives);
-        GameSessionManager.SetContinues(continues);
 
-
-        CommitChangesSpecifics();
-
-        GameSessionManager.SetLevel(currentLevel);
-
-        foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (level.Value.completed) {
-                GameSessionManager.SetLevelCompleted(level.Key);
-            }
-        }
-        GameSessionManager.Save();
-    }
-
-
-    // load the game specific data
     protected abstract void LoadSpecifics();
-    // save the game specific data
     protected abstract void CommitChangesSpecifics();
-    // data to be set when losing a life
+
+    // called when losing a life
     protected abstract void ResetLifeData();
-    // data to be set when losing a continue
+    // called when losing a continue
     protected abstract void ResetContinueData();
 
 }

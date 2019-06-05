@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 437274, guid: c264dc6b52dffc64b835ff96d7c90154, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11488088, guid: c264dc6b52dffc64b835ff96d7c90154, type: 3}
       propertyPath: gameDataManager
@@ -185,6 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aca1148e7fbce04b83e602898e25ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canLeaveGraph: 0
+  exitScene: 
 --- !u!1001 &1010399381
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -334,7 +336,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1118895843
 GameObject:

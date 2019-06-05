@@ -2,8 +2,8 @@
 
 public class LevelNode : object {
 
-// !!!! ???? TODO: set as properties ? ???? !!!!
-// => SOME FIELDS NEED TO BE READ-ONLY !!!! => define Getters, no Setters
+//TODO: set as properties
+// => SOME FIELDS NEED TO BE READ-ONLY !!!! { get; private set; }
     public int id;
     public string scene;
     public string name;

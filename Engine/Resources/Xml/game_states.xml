@@ -5,6 +5,7 @@
   <state id="MAP" scene="Map">
     <children>
       <child id="BEGIN_ANIM"/>
+      <child id="QUIT"/>
     </children>
   </state>
   <state id="BEGIN_ANIM" scene="BeginAnim" next="BRIEFING"/>
@@ -13,6 +14,7 @@
     <children>
       <child id="END_ANIM"/>
       <child id="END_ANIM_FAIL"/>
+      <child id="QUIT"/>
     </children>
   </state>
 

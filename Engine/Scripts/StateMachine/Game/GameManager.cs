@@ -1,41 +1,46 @@
-﻿using UnityEngine;
+﻿/*
+If want to use Global data in game, uncomment the "GLOBAL_IN_GAME" blocks.
+*/
 
-public class GameManager : MonoBehaviour
-{
+//TODO: MAKE SURE THE NAME OF THE SCRIPT DOESN'T CAUSE PROBLEMS
+//=> "GameManager" is a Unity reserved name...
+
+public class GameManager : IManager {
+
     public GameStateManager gameStateManager;
-//    public GlobalDataManager globalDataManager;
-    public GameDataManager gameDataManager;
-//    public GameObject soundManager;
+    public IGameDataManager gameDataManager;
+//////// GLOBAL_IN_GAME - BEGIN
+//    public IGlobalDataManager globalDataManager;
+//////// GLOBAL_IN_GAME - END
 
 
-    void Awake()
-    {
-        if (!GameStateManager.IsInstance())
-        {
-            Instantiate(gameStateManager);
-        }
-
+//////// GLOBAL_IN_GAME - BEGIN
 /*
-        if (SoundManager.instance == null)
-        {
-            Instantiate(soundManager);
+    protected override void InitDataManager(IStateManager stateManager) {
+        if (stateManager.GetGlobalDataManager() == null) {
+            IDataManager dataManager = InstantiateGlobalDataManager();
+            stateManager.SetGlobalDataManager(dataManager);
+//? GlobalSessionManager.Init();
+            stateManager.GetGlobalDataManager().Load();
+//? GameSessionManager.Load();
         }
-*/
 
-        GameStateManager stateManager = GameStateManager.Instance;
-/*
-        if (stateManager.GetGlobalData() == null) {
-            GlobalDataManager globalData = Instantiate(globalDataManager);
-            stateManager.SetGlobalData(globalData);
-//?            GlobalSessionManager.Init();
-            stateManager.GetGlobalData().Load();
-        }
-*/
-        if (stateManager.GetGameData() == null) {
-            GameDataManager gameData = Instantiate(gameDataManager);
-            stateManager.SetGameData(gameData);
-            stateManager.GetGameData().Load();
-        }
+        base.InitDataManager(stateManager);
     }
+*/
+//////// GLOBAL_IN_GAME - END
+
+    protected override void InstantiateStateManager() {
+        Instantiate(gameStateManager);
+    }
+
+    protected override IStateManager GetStateManager() {
+        return GameStateManager.Instance;
+    }
+
+    protected override IDataManager InstantiateDataManager() {
+        return Instantiate(gameDataManager);
+    }
+
 
 }

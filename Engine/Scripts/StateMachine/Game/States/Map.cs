@@ -25,7 +25,9 @@ public class Map : GameStateController {
 
     public void StartLevel(int level) {
         GetGameData().SetLevel(level);
-        ChangeState(GameStateId.BEGIN_ANIM);
+//        ChangeState(GameStateId.BEGIN_ANIM);
+//        ChangeState(StateId.Id("BEGIN_ANIM"));
+LoadChildState("BEGIN_ANIM");
     }
 
     public List<int> GetLevels() {
@@ -34,7 +36,11 @@ public class Map : GameStateController {
 
 
     public void QuitGame() {
-        ChangeState(GameStateId.QUIT);
+//TODO: can be added as child?	
+//        ChangeState(GameStateId.QUIT);
+//        ChangeState(StateId.Id("QUIT"));
+//TODO: "QUIT" is not a chid => usde Next? End? or accept other than children?
+LoadChildState("QUIT");
     }
 
     public void SaveGame(string filename) {

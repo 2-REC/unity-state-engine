@@ -22,7 +22,9 @@ public abstract class Level : GameStateController {
             EndProcessWin();
             GetGameData().CommitChanges();
 
-            ChangeState(GameStateId.END_ANIM);
+//            ChangeState(GameStateId.END_ANIM);
+//            ChangeState(StateId.Id("END_ANIM"));
+LoadChildState("END_ANIM");
         }
         else {
             //Debug.Log("FAIL");
@@ -31,7 +33,9 @@ public abstract class Level : GameStateController {
             EndProcessLose();
             GetGameData().CommitChanges();
 
-            ChangeState(GameStateId.END_ANIM_FAIL);
+//            ChangeState(GameStateId.END_ANIM_FAIL);
+//            ChangeState(StateId.Id("END_ANIM_FAIL"));
+LoadChildState("END_ANIM_FAIL");
         }
     }
 
@@ -43,7 +47,10 @@ GameSessionManager.SaveGame(filename);
 
 // !!!! TODO: should also have a "QuitLevel" (& return to Map) !!!!
     public void QuitGame() {
-        ChangeState(GameStateId.QUIT);
+//TODO: can be added as child?	
+//        ChangeState(GameStateId.QUIT);
+//        ChangeState(StateId.Id("QUIT"));
+LoadChildState("QUIT");
     }
 
 

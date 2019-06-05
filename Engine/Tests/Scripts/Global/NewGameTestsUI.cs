@@ -7,7 +7,7 @@ public class NewGameTestsUI : MonoBehaviour {
     public Text text;
 
     void Start() {
-        text.text = ctrl.stateId.ToString();
+        text.text = StateIds.Name(ctrl.StateId);
     }
 
     public void StartGameEasy() {

@@ -361,7 +361,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f9ecc875b6511e4d94c18a6c8951fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitScene: Map
+  canLeaveGraph: 1
+  exitScene: Assets/Scenes/Game/Map.unity
 --- !u!1 &692124574
 GameObject:
   m_ObjectHideFlags: 0

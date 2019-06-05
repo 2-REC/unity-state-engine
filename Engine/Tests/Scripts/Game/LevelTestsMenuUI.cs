@@ -13,7 +13,7 @@ public class LevelTestsMenuUI : MonoBehaviour {
     }
 
     void Start() {
-        text.text = level.stateId.ToString();
+        text.text = level.StateId.ToString();
         textLevel.text = level.GetGameData().GetLevelName();
     }
 

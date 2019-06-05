@@ -9,7 +9,7 @@ public class MenuTestsUI : MonoBehaviour {
 
 
     void Start () {
-        text.text = ctrl.stateId.ToString();
+        text.text = StateIds.Name(ctrl.StateId);
         if (GameSessionManager.GetLevel() == -1) {
             buttonContinue.SetActive(false);
         }

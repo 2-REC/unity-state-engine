@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22446344, guid: c9357216412fc9b418137f1633642800, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 22446344, guid: c9357216412fc9b418137f1633642800, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -345,7 +345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 437274, guid: c264dc6b52dffc64b835ff96d7c90154, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11488088, guid: c264dc6b52dffc64b835ff96d7c90154, type: 3}
       propertyPath: gameDataManager
@@ -373,6 +373,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a4b351e34eb238468034b68164c1efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canLeaveGraph: 0
+  exitScene: 
   startDelayValue: 0
   delayValue: 0
 --- !u!1001 &1609485407

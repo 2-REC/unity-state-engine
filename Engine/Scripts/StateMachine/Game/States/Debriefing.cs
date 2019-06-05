@@ -24,7 +24,9 @@ public class Debriefing : GameStateController {
             // save data now to avoid loss in case of crash/stop
 //            GetGameData().CommitChanges();
 
-            ChangeState(GameStateId.GAME_END);
+//            ChangeState(GameStateId.GAME_END);
+//            ChangeState(StateId.Id("GAME_END"));
+LoadChildState("GAME_END");
         }
     }
 
@@ -37,7 +39,9 @@ public class Debriefing : GameStateController {
 // !!!! TODO: remove !!!!
 // (& associated GUI button)
     public void GameEnd() {
-        ChangeState(GameStateId.GAME_END);
+//        ChangeState(GameStateId.GAME_END);
+//        ChangeState(StateId.Id("GAME_END"));
+LoadChildState("GAME_END");
     }
 
 }

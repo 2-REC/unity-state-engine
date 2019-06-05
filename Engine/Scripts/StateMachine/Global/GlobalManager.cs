@@ -1,36 +1,19 @@
-﻿using UnityEngine;
+﻿public class GlobalManager : IManager {
 
-public class GlobalManager : MonoBehaviour
-{
     public GlobalStateManager globalStateManager;
-    public GlobalDataManager globalDataManager;
-//    public GameObject soundManager;
+    public IGlobalDataManager globalDataManager;
 
 
-    void Awake()
-    {
-        if (!GlobalStateManager.IsInstance())
-        {
-            Instantiate(globalStateManager);
-        }
+    protected override void InstantiateStateManager() {
+        Instantiate(globalStateManager);
+    }
 
-/*
-        if (SoundManager.instance == null)
-        {
-            Instantiate(soundManager);
-        }
-*/
+    protected override IStateManager GetStateManager() {
+        return GlobalStateManager.Instance;
+    }
 
-        GlobalStateManager stateManager = GlobalStateManager.Instance;
-        if (stateManager.GetGlobalData() == null) {
-            GlobalDataManager globalData = Instantiate(globalDataManager);
-            stateManager.SetGlobalData(globalData);
-            GlobalSessionManager.Init();
-            stateManager.GetGlobalData().Load();
-
-// !!!! ???? TODO: OK HERE ? ???? !!!!
-GameSessionManager.Load();
-        }
+    protected override IDataManager InstantiateDataManager() {
+        return Instantiate(globalDataManager);
     }
 
 }

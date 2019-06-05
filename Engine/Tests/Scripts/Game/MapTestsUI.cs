@@ -17,7 +17,7 @@ public class MapTestsUI : MonoBehaviour {
 
 
     void Start() {
-        text.text = ctrl.stateId.ToString();
+        text.text = ctrl.StateId.ToString();
         panelSave.gameObject.SetActive(false);
 
         float positionY = 50.0f;

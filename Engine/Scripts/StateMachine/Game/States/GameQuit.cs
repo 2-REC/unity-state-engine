@@ -2,7 +2,7 @@
 
 public class GameQuit : GameStateController {
 
-    public String exitScene = "Logo";
+//    public String exitScene = "Logo";
 
 /*
     public override void HandleMainState() {
@@ -12,7 +12,8 @@ public class GameQuit : GameStateController {
 */
 
     public void LeaveGame() {
-        Leave(exitScene);
+//        Leave(exitScene);
+Leave();
     }
 
 }

@@ -1,33 +1,24 @@
-﻿using UnityEngine;
+﻿public class Menu : GlobalStateController {
 
-public class Menu : GlobalStateController
-{
-    public string continueScene = "Map";
-
-
-    public void NewGame()
-    {
-        ChangeState(GlobalStateId.NEW_GAME);
+    public void NewGame() {
+        LoadChildState("NEW_GAME");
     }
 
-    public void LoadGame()
-    {
-        ChangeState(GlobalStateId.LOAD_GAME);
+    public void LoadGame() {
+        LoadChildState("LOAD_GAME");
     }
 
-    public void Continue()
-    {
-        Leave(continueScene);
+//TODO: remove this method, and call directly "Leave" (as it is public)
+    public void Continue() {
+        Leave();
     }
 
-    public void Options()
-    {
-        ChangeState(GlobalStateId.OPTIONS);
+    public void Options() {
+        LoadChildState("OPTIONS");
     }
 
-    public void Credits()
-    {
-        ChangeState(GlobalStateId.CREDITS);
+    public void Credits() {
+        LoadChildState("CREDITS");
     }
 
 }

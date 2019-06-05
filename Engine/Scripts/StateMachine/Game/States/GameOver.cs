@@ -30,7 +30,9 @@ public class GameOver : GameStateController {
 // !!!! ???? TODO: OK ? ???? !!!!
 // (or SetDifficulty(-1)?
             GetGameData().SetLevel(-1);
-            ChangeState(GameStateId.QUIT);
+//            ChangeState(GameStateId.QUIT);
+//            ChangeState(StateId.Id("QUIT"));
+LoadChildState("QUIT");
         }
     }
 

@@ -251,7 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91726b1d725be114c8b2c0faa460f1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  exitScene: GameIntro
+  canLeaveGraph: 1
+  exitScene: Assets/Scenes/Game/GameIntro.unity
 --- !u!1001 &1132796568
 PrefabInstance:
   m_ObjectHideFlags: 0

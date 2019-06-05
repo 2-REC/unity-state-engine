@@ -13,8 +13,8 @@ public class GameData : GameDataManager {
         points = GameSessionManager.GetField("POINTS");
         health = GameSessionManager.GetField("HEALTH");
 
-        Debug.Log("GlobalStateManager:Load - points: " + points);
-        Debug.Log("GlobalStateManager:Load - health: " + health);
+        Debug.Log("GameData:Load - points: " + points);
+        Debug.Log("GameData:Load - health: " + health);
         ////////
     }
 
@@ -23,8 +23,8 @@ public class GameData : GameDataManager {
         GameSessionManager.SetField("POINTS", points);
         GameSessionManager.SetField("HEALTH", health);
 
-        Debug.Log("GlobalStateManager:CommitChangesSpecifics - points: " + points);
-        Debug.Log("GlobalStateManager:CommitChangesSpecifics - health: " + health);
+        Debug.Log("GameData:CommitChangesSpecifics - points: " + points);
+        Debug.Log("GameData:CommitChangesSpecifics - health: " + health);
         ////////
     }
 

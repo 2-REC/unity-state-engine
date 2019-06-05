@@ -1,13 +1,8 @@
-﻿using System;
-using UnityEngine;
-
-public class NewGame : GlobalStateController {
-
-    public String exitScene = "GameIntro";
+﻿public class NewGame : GlobalStateController {
 
     public void StartGame(int difficulty) {
         GameSessionManager.NewGame(difficulty);
-        Leave(exitScene);
+        Leave();
     }
 
 }

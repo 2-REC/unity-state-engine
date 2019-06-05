@@ -13,25 +13,26 @@ public abstract class IGlobalDataManager : IDataManager {
     // Get global data
     protected override void LoadData() {
 //TODO: OK HERE?
-GlobalSessionManager.Init();
+GlobalSessionManager.Instance.Init();
 
-//        GlobalSessionManager.Get...();
+//        GlobalSessionManager.Instance.Get...();
 //...
 
         LoadSpecifics();
 
 //TODO: OK HERE?
-GameSessionManager.Load();
+GameSessionManager.Instance.Load();
     }
 
     // Save global data
     public override void CommitChanges() {
-//        GlobalSessionManager.Set...(...);
+//        GlobalSessionManager.Instance.Set...(...);
 //...
 
         CommitChangesSpecifics();
 
-        GlobalSessionManager.Save();
+//        GlobalSessionManager.Save();
+        GlobalSessionManager.Instance.Save();
     }
 
 //TODO: needed?

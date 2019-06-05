@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 11405200}
   - component: {fileID: 11405944}
   - component: {fileID: 11456544}
-  - component: {fileID: 11439064}
+  - component: {fileID: 5224610999096773783}
   m_Layer: 5
   m_Name: GameAnim Tests UI Canvas
   m_TagString: Untagged
@@ -327,7 +327,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ctrl: {fileID: 0}
   text: {fileID: 11479576}
---- !u!114 &11439064
+--- !u!114 &5224610999096773783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -336,7 +336,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 142114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a672625ce4aabb40b029677d557651d, type: 3}
+  m_Script: {fileID: 11500000, guid: fc2a588dbe032de4182407e9d4444e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ctrl: {fileID: 0}

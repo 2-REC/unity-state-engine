@@ -11,8 +11,8 @@ public class OptionsTestsUI : MonoBehaviour {
     }
 
     public void ResetAll() {
-        GameSessionManager.Clear();
-        GlobalSessionManager.Clear();
+        GameSessionManager.Instance.Clear();
+        GlobalSessionManager.Instance.Clear();
     }
 
     public void OK() {

@@ -14,4 +14,7 @@
 /*/[Aa]ssets/[Ss]tate[Ee]ngine/
 /*/[Aa]ssets/[Ss]tate[Ee]ngine.meta
 
+# keep this? (or specify only generated json files?)
+/*/[Aa]ssets/[Ss]treaming[Aa]ssets/
+
 # ignore files generated in "StreamingAssets"?

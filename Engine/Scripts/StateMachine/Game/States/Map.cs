@@ -39,7 +39,7 @@ public class Map : GameStateController {
     }
 
     public void SaveGame(string filename) {
-        GameSessionManager.SaveGame(filename);
+        GameSessionManager.Instance.SaveGame(filename);
     }
 
 }

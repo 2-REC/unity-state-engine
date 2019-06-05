@@ -6,6 +6,9 @@ public abstract class IGameDataManager : IDataManager {
 //TODO: move somewhere else?
     private const string GRAPH_LEVELS = "Xml/levels";
 
+//?    private GameSessionManager gameSessionManager = GameSessionManager.Instance;
+    private GameSessionManager gameSessionManager;
+
     // list of all levels
     private Dictionary<int, LevelNode> levels;
     // list of available levels & their status
@@ -18,11 +21,13 @@ public abstract class IGameDataManager : IDataManager {
 
     // Get game data
     protected override void LoadData() {
-        currentLevel = GameSessionManager.GetLevel();
+//TODO: sure it's called before any other method?
+        gameSessionManager = GameSessionManager.Instance;
+        currentLevel = gameSessionManager.GetLevel();
         Debug.Log("GameDataManager:Load - level: " + currentLevel);
 
-        lives = GameSessionManager.GetLives();
-        continues = GameSessionManager.GetContinues();
+        lives = gameSessionManager.GetLives();
+        continues = gameSessionManager.GetContinues();
 
         LoadSpecifics();
 
@@ -32,7 +37,7 @@ public abstract class IGameDataManager : IDataManager {
         levels = GameGraphLoader.LoadLevelGraph(GRAPH_LEVELS);
 
         foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (GameSessionManager.IsLevelCompleted(level.Key)) {
+            if (gameSessionManager.IsLevelCompleted(level.Key)) {
                 level.Value.completed = true;
             }
         }
@@ -59,19 +64,19 @@ Debug.Log("levels:");
     // Save game data
     public override void CommitChanges() {
         // update game values
-        GameSessionManager.SetLives(lives);
-        GameSessionManager.SetContinues(continues);
+        gameSessionManager.SetLives(lives);
+        gameSessionManager.SetContinues(continues);
 
         CommitChangesSpecifics();
 
-        GameSessionManager.SetLevel(currentLevel);
+        gameSessionManager.SetLevel(currentLevel);
 
         foreach (KeyValuePair<int, LevelNode> level in levels) {
             if (level.Value.completed) {
-                GameSessionManager.SetLevelCompleted(level.Key);
+                gameSessionManager.SetLevelCompleted(level.Key);
             }
         }
-        GameSessionManager.Save();
+        gameSessionManager.Save();
     }
 
 
@@ -118,7 +123,7 @@ Debug.Log("levels:");
 
     public override void Leave() {
         if (currentLevel == -1) {
-            GameSessionManager.Clear();
+            gameSessionManager.Clear();
         }
         else {
             CommitChanges();
@@ -146,7 +151,7 @@ Debug.Log("levels:");
 
     public int LoseContinue() {
         continues -= 1;
-        lives = GameSessionManager.GetInitialLives();
+        lives = gameSessionManager.GetInitialLives();
 
         ResetContinueData();
 
@@ -191,8 +196,7 @@ Debug.Log("levels:");
         return (lives <= 0);
     }
 
-// !!!! ???? TODO: why? ???? !!!!
-// CHECK THIS!
+//TODO: CHECK THIS! why?
     public bool IsGameComplete() {
         return (continues <= 0);
     }

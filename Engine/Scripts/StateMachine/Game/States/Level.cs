@@ -37,7 +37,7 @@
         SaveProcess();
 //TODO: OK here?
 GetGameData().CommitChanges();
-GameSessionManager.SaveGame(filename);
+GameSessionManager.Instance.SaveGame(filename);
     }
 
 //TODO: should also have a "QuitLevel" (& return to Map)

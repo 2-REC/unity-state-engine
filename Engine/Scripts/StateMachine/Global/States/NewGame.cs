@@ -1,7 +1,7 @@
 ﻿public class NewGame : GlobalStateController {
 
     public void StartGame(int difficulty) {
-        GameSessionManager.NewGame(difficulty);
+        GameSessionManager.Instance.NewGame(difficulty);
         Leave();
     }
 

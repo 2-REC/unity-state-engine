@@ -27,12 +27,10 @@ public class GameOver : GameStateController {
            // Update Game Data that should be saved when losing the game and have no continues
            //...
 
-// !!!! ???? TODO: OK ? ???? !!!!
+//TODO: OK?
 // (or SetDifficulty(-1)?
             GetGameData().SetLevel(-1);
-//            ChangeState(GameStateId.QUIT);
-//            ChangeState(StateId.Id("QUIT"));
-LoadChildState("QUIT");
+            LoadChildState("QUIT");
         }
     }
 

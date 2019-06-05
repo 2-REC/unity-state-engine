@@ -3,6 +3,7 @@
 public class Debriefing : GameStateController {
 
     public override void HandleMainState() {
+//TODO: ?
 //        GetGameData().SetLevelCompleted();
 
         Debug.Log(GetGameData().IsGameComplete() ? "GAME COMPLETED" : "GAME NOT COMPLETED");
@@ -13,6 +14,7 @@ public class Debriefing : GameStateController {
         if (!GetGameData().IsGameComplete()) {
             Debug.Log("GAME NOT COMPLETED");
 
+//TODO: ?
             // save data now to avoid loss in case of crash/stop
 //            GetGameData().CommitChanges();
 
@@ -21,27 +23,24 @@ public class Debriefing : GameStateController {
         else {
             Debug.Log("GAME COMPLETED");
 
+//TODO: ?
             // save data now to avoid loss in case of crash/stop
 //            GetGameData().CommitChanges();
 
-//            ChangeState(GameStateId.GAME_END);
-//            ChangeState(StateId.Id("GAME_END"));
-LoadChildState("GAME_END");
+            LoadChildState("GAME_END");
         }
     }
 
-// !!!! TODO: remove !!!!
+//TODO: to remove! (test purpose)
 // (& associated GUI button)
     public void Next() {
         End();
     }
 
-// !!!! TODO: remove !!!!
+//TODO: to remove! (test purpose)
 // (& associated GUI button)
     public void GameEnd() {
-//        ChangeState(GameStateId.GAME_END);
-//        ChangeState(StateId.Id("GAME_END"));
-LoadChildState("GAME_END");
+        LoadChildState("GAME_END");
     }
 
 }

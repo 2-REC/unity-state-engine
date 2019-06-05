@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public abstract class Level : GameStateController {
+﻿public abstract class Level : GameStateController {
 
     protected int lives;
 
@@ -22,9 +20,7 @@ public abstract class Level : GameStateController {
             EndProcessWin();
             GetGameData().CommitChanges();
 
-//            ChangeState(GameStateId.END_ANIM);
-//            ChangeState(StateId.Id("END_ANIM"));
-LoadChildState("END_ANIM");
+            LoadChildState("END_ANIM");
         }
         else {
             //Debug.Log("FAIL");
@@ -33,39 +29,34 @@ LoadChildState("END_ANIM");
             EndProcessLose();
             GetGameData().CommitChanges();
 
-//            ChangeState(GameStateId.END_ANIM_FAIL);
-//            ChangeState(StateId.Id("END_ANIM_FAIL"));
-LoadChildState("END_ANIM_FAIL");
+            LoadChildState("END_ANIM_FAIL");
         }
     }
 
     public void Save(string filename) {
         SaveProcess();
+//TODO: OK here?
 GetGameData().CommitChanges();
 GameSessionManager.SaveGame(filename);
     }
 
-// !!!! TODO: should also have a "QuitLevel" (& return to Map) !!!!
+//TODO: should also have a "QuitLevel" (& return to Map)
     public void QuitGame() {
-//TODO: can be added as child?	
-//        ChangeState(GameStateId.QUIT);
-//        ChangeState(StateId.Id("QUIT"));
-LoadChildState("QUIT");
+        LoadChildState("QUIT");
     }
 
 
+    public virtual void Pause() { }
+    public virtual void Unpause() { }
+
     // Level initialisations
     protected abstract void InitGame();
-    // Update Game Data that should be saved when finishing the level (win or fail)
+    // Update Game Data to save when finishing the level (win or fail)
     protected abstract void EndProcess();
-    // Update Game Data that should be saved when winning the level.
+    // Update Game Data to save when winning the level.
     protected virtual void EndProcessWin() {}
-    // Update Game Data that should be saved when losing the level.
+    // Update Game Data to save when losing the level.
     protected virtual void EndProcessLose() {}
-    // Update Game Data that should be saved when saving the level
+    // Update Game Data to save when saving the level
     protected virtual void SaveProcess() {}
-
-    public virtual void Pause() {}
-    public virtual void Unpause() {}
-
 }

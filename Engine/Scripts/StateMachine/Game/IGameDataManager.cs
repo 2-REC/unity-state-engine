@@ -77,7 +77,7 @@ Debug.Log("levels:");
 
     private void SetLevels() {
         foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (level.Value.startup) {
+            if (level.Value.Startup) {
                 availableLevels.Add(level.Key, level.Value.completed);
                 if (level.Value.completed) {
                     UpdateLevels(level.Key);
@@ -87,7 +87,7 @@ Debug.Log("levels:");
     }
 
     private void UpdateLevels(int level) {
-        List<int> next = levels[level].next;
+        List<int> next = levels[level].Next;
         if (next != null) {
             for (int i = 0; i < next.Count; ++i) {
                 if (!availableLevels.ContainsKey(next[i])) {
@@ -171,14 +171,14 @@ Debug.Log("levels:");
 
     public string GetSceneName() {
         if (currentLevel != -1) {
-            return levels[currentLevel].scene;
+            return levels[currentLevel].Scene;
         }
         return null;
     }
 
     public string GetLevelName() {
         if (currentLevel != -1) {
-            return levels[currentLevel].name;
+            return levels[currentLevel].Name;
         }
         return null;
     }

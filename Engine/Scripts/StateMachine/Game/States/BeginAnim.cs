@@ -1,7 +1,6 @@
-﻿using UnityEngine;
+﻿public class BeginAnim : GameStateController {
 
-public class BeginAnim : GameStateController {
-
+//TODO: Make class generic for other states & handle an animation object (+ add an Editor script)
     public string defaultAnim;
 
     private string anim;
@@ -9,7 +8,7 @@ public class BeginAnim : GameStateController {
     public override void HandleMainState() {
         //Debug.Log("BeginAnim:HandleMainState - currentState: " + gameStateManager.currentStateId);
 
-        anim = GetGameData().GetLevelNode().beginAnim;
+        anim = GetGameData().GetLevelNode().BeginAnim;
         //Debug.Log("BeginAnim:Load - beginAnim: " + anim);
         if ((anim == null) || "".Equals(anim)) {
             anim = defaultAnim;

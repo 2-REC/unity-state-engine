@@ -1,8 +1,4 @@
-﻿using System;
-
-public class GameQuit : GameStateController {
-
-//    public String exitScene = "Logo";
+﻿public class GameQuit : GameStateController {
 
 /*
     public override void HandleMainState() {
@@ -12,8 +8,7 @@ public class GameQuit : GameStateController {
 */
 
     public void LeaveGame() {
-//        Leave(exitScene);
-Leave();
+        Leave();
     }
 
 }

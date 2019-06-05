@@ -22,9 +22,7 @@ public class Continue : GameStateController {
         // Update Game Data that should be saved when losing the game and not continuing
         //...
 
-//        ChangeState(GameStateId.QUIT);
-//        ChangeState(StateId.Id("QUIT"));
-LoadChildState("QUIT");
+        LoadChildState("QUIT");
     }
 
 }

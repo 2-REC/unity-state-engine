@@ -2,40 +2,47 @@
 
 public class LevelNode : object {
 
-//TODO: set as properties
-// => SOME FIELDS NEED TO BE READ-ONLY !!!! { get; private set; }
-    public int id;
-    public string scene;
-    public string name;
-    public string beginAnim;
-    public string endAnim;
-    public string endAnimFail;
-    public bool startup;
-    public List<int> next = null;
-    public bool completed = false;
+    public int Id { get; private set; }
+    public string Scene { get; private set; }
+    public string Name { get; private set; }
+    public List<int> Next { get; private set; }
 
-    public LevelNode(int id, string scene, string name)
-    {
-        this.id = id;
-        this.scene = scene;
-        this.name = name;
+    public string BeginAnim { get; private set; }
+    public string EndAnim { get; private set; }
+    public string EndAnimFail { get; private set; }
+    public bool Startup { get; private set; }
+
+    public bool completed;
+
+
+    public LevelNode(int id, string scene, string name) {
+        Id = id;
+        Scene = scene;
+        Name = name;
+
+        Startup = false;
+        Next = null;
+        completed = false;
     }
 
     public LevelNode(int id, string scene, string name, string beginAnim, string endAnim, string endAnimFail, bool startup) {
-        this.id = id;
-        this.scene = scene;
-        this.name = name;
-        this.beginAnim = beginAnim;
-        this.endAnim = endAnim;
-        this.endAnimFail = endAnimFail;
-        this.startup = startup;
+        Id = id;
+        Scene = scene;
+        Name = name;
+        BeginAnim = beginAnim;
+        EndAnim = endAnim;
+        EndAnimFail = endAnimFail;
+        Startup = startup;
+
+        Next = null;
+        completed = false;
     }
 
     public void AddNext(int nextId) {
-        if (next == null) {
-            next = new List<int>();
+        if (Next == null) {
+            Next = new List<int>();
         }
-        next.Add(nextId);
+        Next.Add(nextId);
     }
 
 }

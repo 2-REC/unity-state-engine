@@ -17,9 +17,7 @@ public class DebriefingFail : GameStateController {
             // save data now to avoid loss in case of crash/stop
             GetGameData().CommitChanges();
 
-//            ChangeState(GameStateId.GAME_OVER);
-//            ChangeState(StateId.Id("GAME_OVER"));
-LoadChildState("GAME_OVER");
+            LoadChildState("GAME_OVER");
         }
         else {
             Debug.Log("RETRY");

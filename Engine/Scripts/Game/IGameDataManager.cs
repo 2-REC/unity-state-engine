@@ -6,8 +6,8 @@ public abstract class IGameDataManager : IDataManager {
 //TODO: move somewhere else?
     private const string GRAPH_LEVELS = "Xml/levels";
 
-//?    private GameSessionManager gameSessionManager = GameSessionManager.Instance;
-    private GameSessionManager gameSessionManager;
+//?    protected GameSessionManager gameSessionManager = GameSessionManager.Instance;
+    protected GameSessionManager gameSessionManager;
 
     // list of all levels
     private Dictionary<int, LevelNode> levels;

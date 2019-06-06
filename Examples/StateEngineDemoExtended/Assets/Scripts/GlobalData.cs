@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GlobalData : GlobalDataManager {
+public class GlobalData : IGlobalDataManager {
 
 //...
 

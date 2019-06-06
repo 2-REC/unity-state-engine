@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class GameData : GameDataManager {
+public class GameData : IGameDataManager {
 
     ////////
     private int points = 0;
@@ -10,8 +10,8 @@ public class GameData : GameDataManager {
 
     protected override void LoadSpecifics() {
         ////////
-        points = GameSessionManager.GetField("POINTS");
-        health = GameSessionManager.GetField("HEALTH");
+        points = gameSessionManager.GetField("POINTS");
+        health = gameSessionManager.GetField("HEALTH");
 
         Debug.Log("GameData:Load - points: " + points);
         Debug.Log("GameData:Load - health: " + health);
@@ -20,8 +20,8 @@ public class GameData : GameDataManager {
 
     protected override void CommitChangesSpecifics() {
         ////////
-        GameSessionManager.SetField("POINTS", points);
-        GameSessionManager.SetField("HEALTH", health);
+        gameSessionManager.SetField("POINTS", points);
+        gameSessionManager.SetField("HEALTH", health);
 
         Debug.Log("GameData:CommitChangesSpecifics - points: " + points);
         Debug.Log("GameData:CommitChangesSpecifics - health: " + health);
@@ -31,13 +31,13 @@ public class GameData : GameDataManager {
 
     protected override void ResetLifeData() {
         ////////
-        health = GameSessionManager.GetInitialField("HEALTH");
+        health = gameSessionManager.GetInitialField("HEALTH");
         ////////
     }
 
     protected override void ResetContinueData() {
         ////////
-        points = GameSessionManager.GetInitialField("POINTS");;
+        points = gameSessionManager.GetInitialField("POINTS");;
         ////////
     }
 
@@ -52,7 +52,7 @@ public class GameData : GameDataManager {
     }
 
     public int GetInitialHealth() {
-        return GameSessionManager.GetInitialField("HEALTH");
+        return gameSessionManager.GetInitialField("HEALTH");
     }
 
     public int GetHealth() {

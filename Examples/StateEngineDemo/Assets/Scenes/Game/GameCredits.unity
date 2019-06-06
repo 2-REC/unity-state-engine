@@ -426,29 +426,14 @@ PrefabInstance:
       propertyPath: ctrl
       value: 
       objectReference: {fileID: 1065671870}
+    - target: {fileID: 5224610999096773783, guid: 9ed56491a5d7ed04e87f4d445da54088,
+        type: 3}
+      propertyPath: ctrl
+      value: 
+      objectReference: {fileID: 1065671870}
     m_RemovedComponents:
     - {fileID: 11439064, guid: 9ed56491a5d7ed04e87f4d445da54088, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9ed56491a5d7ed04e87f4d445da54088, type: 3}
---- !u!1 &1187434744 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 142114, guid: 9ed56491a5d7ed04e87f4d445da54088,
-    type: 3}
-  m_PrefabInstance: {fileID: 1187434743}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1187434745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1187434744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc2a588dbe032de4182407e9d4444e61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ctrl: {fileID: 1065671870}
-  delay: 5
 --- !u!1 &1675833621
 GameObject:
   m_ObjectHideFlags: 0

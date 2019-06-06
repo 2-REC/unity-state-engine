@@ -258,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 437274, guid: c264dc6b52dffc64b835ff96d7c90154, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 11488088, guid: c264dc6b52dffc64b835ff96d7c90154, type: 3}
       propertyPath: gameDataManager
@@ -286,6 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 430809c15afe32e4ab4995ac79e1ed07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canLeaveGraph: 0
+  exitScene: 
 --- !u!1 &1209533935
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,7 +482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22486164, guid: c600a531a29136246a6623cf1acb1eb8, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 22486164, guid: c600a531a29136246a6623cf1acb1eb8, type: 3}
       propertyPath: m_AnchoredPosition.x

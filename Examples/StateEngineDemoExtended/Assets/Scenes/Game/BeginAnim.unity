@@ -364,6 +364,11 @@ PrefabInstance:
       propertyPath: ctrl
       value: 
       objectReference: {fileID: 1851301695}
+    - target: {fileID: 5224610999096773783, guid: 9ed56491a5d7ed04e87f4d445da54088,
+        type: 3}
+      propertyPath: ctrl
+      value: 
+      objectReference: {fileID: 1851301695}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ed56491a5d7ed04e87f4d445da54088, type: 3}
 --- !u!1 &1702581164
@@ -536,4 +541,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa165fb6911298b4c8b6854d878bf2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canLeaveGraph: 0
+  exitScene: 
   defaultAnim: test

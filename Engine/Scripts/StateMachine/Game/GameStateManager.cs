@@ -10,7 +10,7 @@ public class GameStateManager : IStateManager {
 public static string GRAPH_XML = "Xml/game_states";
 
 //////// GLOBAL_IN_GAME - BEGIN
-//    private IGlobalDataManager globalDataManager = null;
+    private IGlobalDataManager globalDataManager = null;
 //////// GLOBAL_IN_GAME - END
 
 
@@ -40,7 +40,6 @@ public static string GRAPH_XML = "Xml/game_states";
     }
 
 //////// GLOBAL_IN_GAME - BEGIN
-/*
     public void SetGlobalDataManager(IGlobalDataManager globalDataManager) {
         if (this.globalDataManager == null) {
             this.globalDataManager = globalDataManager;
@@ -50,7 +49,6 @@ public static string GRAPH_XML = "Xml/game_states";
     public IGlobalDataManager GetGlobalDataManager() {
         return globalDataManager;
     }
-*/
 //////// GLOBAL_IN_GAME - END
 
 }

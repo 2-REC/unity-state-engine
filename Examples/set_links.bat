@@ -12,6 +12,7 @@ IF not exist StateEngine (
 )
 cd StateEngine
 
+mklink /D Editor "..\..\..\..\Engine\Editor
 mklink /D Prefabs "..\..\..\..\Engine\Prefabs
 mklink /D Resources "..\..\..\..\Engine\Resources
 mklink /D Scripts "..\..\..\..\Engine\Scripts
@@ -30,6 +31,7 @@ IF not exist StateEngine (
 )
 cd StateEngine
 
+mklink /D Editor "..\..\..\..\Engine\Editor
 mklink /D Prefabs "..\..\..\..\Engine\Prefabs
 mklink /D Resources "..\..\..\..\Engine\Resources
 mklink /D Scripts "..\..\..\..\Engine\Scripts

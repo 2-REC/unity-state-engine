@@ -1,18 +1,22 @@
-﻿using UnityEngine;
+﻿public class GlobalData : IGlobalDataManager {
 
-public class GlobalData : IGlobalDataManager {
-
-//...
+    //////// GAME - BEGIN
+    //...
+    //////// GAME - END
 
 
     protected override void LoadSpecifics() {
-//        ... = GlobalSessionManager.GetField("...");
-//...
+        //////// GAME - BEGIN
+        //... = GlobalSessionManager.GetField("...");
+        //...
+        //////// GAME - END
     }
 
     protected override void CommitChangesSpecifics() {
-//        GlobalSessionManager.SetField("...", ...);
-//...
+        //////// GAME - BEGIN
+        //GlobalSessionManager.SetField("...", ...);
+        //...
+        //////// GAME - END
     }
 
 }

@@ -4,9 +4,11 @@ using UnityEngine.UI;
 
 public class HudController : MonoBehaviour {
 
+    //////// GAME - BEGIN
     public Text livesText;
     public Text pointsText;
     public Slider healthSlider;
+    //////// GAME - END
 
     public Image flashImage;
 
@@ -24,24 +26,6 @@ public class HudController : MonoBehaviour {
     }
 */
 
-    public void InitLifebar(int value, int maxValue) {
-        healthSlider.maxValue = maxValue;
-        healthSlider.value = value;
-    }
-
-    public void SetLifebar(int value) {
-        healthSlider.value = value;
-    }
-
-    public void SetLives(int value) {
-        livesText.text = value.ToString();
-    }
-
-    public void SetPoints(int value) {
-// TODO: could specify a specific format for the text ...
-        pointsText.text = value.ToString();
-    }
-
     public void Flash(Color colour, float speed) {
         flashSpeed = speed;
         flashImage.color = colour;
@@ -56,6 +40,7 @@ public class HudController : MonoBehaviour {
     }
 
     public void FadeIn() {
+//TODO: remove when done developing!
         //// HACK: to allow image to have alpha=0 in editor (& not hide everything...)
         Color color = fadeImage.color;
         color.a = 1.0f;
@@ -93,5 +78,28 @@ public class HudController : MonoBehaviour {
         FadeOut();
         return fadeSpeed;
     }
+
+
+    //////// GAME - BEGIN
+
+    public void InitLifebar(int value, int maxValue) {
+        healthSlider.maxValue = maxValue;
+        healthSlider.value = value;
+    }
+
+    public void SetLifebar(int value) {
+        healthSlider.value = value;
+    }
+
+    public void SetLives(int value) {
+        livesText.text = value.ToString();
+    }
+
+    public void SetPoints(int value) {
+//TODO: could specify a specific format for the text ...
+        pointsText.text = value.ToString();
+    }
+
+    //////// GAME - END
 
 }

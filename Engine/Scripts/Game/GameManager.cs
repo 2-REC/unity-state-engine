@@ -10,24 +10,25 @@ public class GameManager : IManager {
     public GameStateManager gameStateManager;
     public IGameDataManager gameDataManager;
 //////// GLOBAL_IN_GAME - BEGIN
-//    public IGlobalDataManager globalDataManager;
+    public bool useGlobalDataManager = false;
+    public IGlobalDataManager globalDataManager;
 //////// GLOBAL_IN_GAME - END
 
 
 //////// GLOBAL_IN_GAME - BEGIN
-/*
     protected override void InitDataManager(IStateManager stateManager) {
-        if (stateManager.GetGlobalDataManager() == null) {
-            IDataManager dataManager = InstantiateGlobalDataManager();
-            stateManager.SetGlobalDataManager(dataManager);
+        if (useGlobalDataManager) {
+            GameStateManager gameStateManager_local = (GameStateManager)stateManager;
+            if (gameStateManager_local.GetGlobalDataManager() == null) {
+                IGlobalDataManager globalDataManager = InstantiateGlobalDataManager();
+                gameStateManager_local.SetGlobalDataManager(globalDataManager);
 //? GlobalSessionManager.Init();
-            stateManager.GetGlobalDataManager().Load();
+                gameStateManager_local.GetGlobalDataManager().Load();
 //? GameSessionManager.Load();
+            }
         }
-
         base.InitDataManager(stateManager);
     }
-*/
 //////// GLOBAL_IN_GAME - END
 
     protected override void InstantiateStateManager() {
@@ -42,5 +43,10 @@ public class GameManager : IManager {
         return Instantiate(gameDataManager);
     }
 
+//////// GLOBAL_IN_GAME - BEGIN
+    protected IGlobalDataManager InstantiateGlobalDataManager() {
+        return (useGlobalDataManager ? Instantiate(globalDataManager) : null);
+    }
+//////// GLOBAL_IN_GAME - END
 
 }

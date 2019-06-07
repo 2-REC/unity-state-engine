@@ -4,4 +4,8 @@
         return GameStateManager.Instance;
     }
 
+    public IGameDataManager GetGameData() {
+        return (IGameDataManager)stateManager.GetDataManager();
+    }
+
 }

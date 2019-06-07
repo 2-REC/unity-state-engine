@@ -16,6 +16,8 @@ Alternatively, it is possible to manually add or edit the "GAME.json" file.
 
 */
 
+//TODO: should add fields+methods to allow specifying each game parameter (for easier/better testing)
+
 using UnityEngine;
 
 public class InitGame : MonoBehaviour {

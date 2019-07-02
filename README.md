@@ -20,6 +20,18 @@ There are 2 ways to add the engine to a Unity project:<br>
 ...
 How to use:<br>
 
+(TODO: OK HERE?)<br>
+- Implement "GlobalManager" & create a prefab
+- Set script order for "GlobalManager" before "default"!
+    <br>(to be sure it is executed before "StateController")
+- Implement "GameManager" & create a prefab
+- Set script order for "GameManager" before "default" (just after "GlobalManager")!
+    <br>(to be sure it is executed before "StateController")
+<br>?!-TODO: check:
+- Idem with "LevelManager" (StateController last derived level)
+    <br>(for version 2 => move below?)
+
+
 - State graphs are defined in "<b>Resources/Xml/game_states.xml</b>" & "<b>Resources/Xml/global_states.xml</b>"<br>
     => The files don't need to be modified, unless some specific states should be added or removed.<br>
 
@@ -62,6 +74,14 @@ Optional:
 (version 2):
     - can add the "LevelManager" script (version 2), a "LevelController" script to the manager, and a "UI Canvas" prefab (containing a "HudController" script) to the scene, for generic game stuff (health, points, lives)<br>
     - for testing purpose, the prefab object "UI Tests Canvas" can be added to the "UI Canvas" object (as child), and the "LevelManager" object instance must be set in the script public parameters. It will add 4 buttons for the following actions: win level, lose level, get hit, add points.<br>
+
+
+
+- in game states
+    - possibility to "load global" (to init the game data, loaded when coming from global graph)
+        <br>=> allowing to test a game state/scene without to start from global graph.
+<br>(TODO: check if put details here or leave in file...)
+        <br>"InitGame" script in "Tests/Game" (see script for use details).
 
 
 # EXAMPLES

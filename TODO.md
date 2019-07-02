@@ -16,6 +16,10 @@ SCRIPTS:
   - [ ] add a graph editor for the state transitions
   - ...
 
+- [] Fix bug with continue:
+    <br>If choose "no" (and exit game), when come back with "continue", we're back with the last life ...
+    <br>=> Don't allow to continue if chosen "no" (delete data)!
+
 - [ ] Add symbolic links script for Linux ("set_links")
 
 - [ ] Might not be a good thing to call "PlayerPrefs" in "SessionManager.Reset", if want to keep data persistent through different games (eg: highest scores, etc.)

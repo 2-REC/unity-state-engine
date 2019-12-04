@@ -43,12 +43,15 @@
 ### ORGANISATION
 - [ ] Files in "Resources/Xml/" should not be common
     <br>=> Move out of engine (& set templates/examples)
+- [ ] Remove things from "tests" than could be generic
 
 
 ### SCRIPTS
 - General:
     - [ ] For calls to "LoadChildState", use enum of defined children instead of strings
         <br>=> How?
+        - set param as public in Editor
+            <br>=> And provide list of child states (instead of hardcoded!)
     - [ ] See how to manage init timer and game timer properly
         <br>=> NOT as in RAD!
     - [ ] "continueScene" should be enums instead of strings! (?)

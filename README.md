@@ -440,7 +440,7 @@ Optionally, a game graph manager can contain and manage a global data manager, i
 Pre-built prefabs are provided for the graph managers to facilitate the setup, only requiring their properties to be set.
 However, if desired, new ones can easily be built from scratch (and could be part of other game objects - even if this is not recommended).
 
-Alternatively, fully set up prefabs are also provided in the samples(TODO: LINK SAMPLES - eg: GlobalManagerBasic).
+Alternatively, fully set up prefabs are also provided in the samples(TODO: LINK SAMPLES - eg: GlobalManagerStarter).
 
 
 ## Global Manager
@@ -866,6 +866,36 @@ Default empty values, meaning the transition is ignored.
 
 
 # Samples
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+TODO: CHANGE ALL
+
+?
+	## Basic (Starter?)
+		### Global
+			#### Data
+				xml + manager
+			#### State Graph
+		### Game
+			#### Data
+				xml + manager
+			#### State Graph
+			#### Levels
+	## Full (Ready?)
+		### Global
+			#### Data
+				xml + manager
+			#### State Graph
+			#### Scenes & State Controllers
+		### Game
+			#### Data
+				xml + manager
+			#### State Graph
+			#### Scenes & State Controllers
+			#### Levels
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Ready to use graphs and managers...
 +full project

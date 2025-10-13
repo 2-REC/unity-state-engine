@@ -16,13 +16,16 @@ Built for Unity 6.
 
 To use the "State Graph Engine", a number of steps are required, which can be grouped in the following categories:
 * Setup the Unity project
-* Provide the state graphs
+* Design the state graphs
 * Define the game data
+* Build the graph manager prefabs
 * Create the state scenes
-* Build the levels
+* Prepare(?) the game levels
 (TODO: ADD LINKS TO EACH SECTION)
 
-The engine already provides a default working project(TODO: LINK DEFAULT), allowing to use the engine straight away, either for testing/exploring, or to use as a base for a new game.
+(TODO: REWRITE)
+Samples are provided with the engine(TODO: LINK SAMPLES), allowing to use the engine straight away, either for testing/exploring, or to use as a base for a new game.
+
 
 # Project Setup
 
@@ -54,18 +57,22 @@ First part consist in making the Unity project ready to use the engine.
 The state engine manages state transitions based on **graphs**.
 
 Graphs are composed of **states** and **transitions** between these states.
-They are defined in XML files, which must be provided to **graph managers**.
 
-Graphs can be created manually or by using the [graph generation tool](TODO: LINK PROJECT)
+The graphs are managed by **graph managers**(TODO: LINK GRAPH MANAGERS).
+
 
 ## Graphs
 
-In general, a project will manage 2 graphs:
+A game project ideally contains manage 2 graphs:
 * Global Graph: Starting point of the application, allowing to start play sessions.
 * Game Graph: The game itself, handling a play session.
 
-It is however possible to have only a game graph.
+> **NOTE:** It is possible to have only a game graph.
 This however requires a specific initialization, which would normally be made by the global graph (TODO: LINK to section with 'initGame')
+
+Graphs are defined in XML files.
+They can be created manually or by using the [graph generation tool](TODO: LINK PROJECT)
+
 
 ### Global Graph
 
@@ -91,6 +98,7 @@ A global graph can also contain other states with specific roles, including:
 * Game settings screen
 * Game credits
 * etc.
+
 
 ### Game Graph
 
@@ -149,6 +157,7 @@ Here is an example of a game state definition:
 <state id="MAP" scene="Map" restartable="true" leavable="true" next="LEVEL">
 ```
 
+
 ### Level State
 
 A game graph should contain a level state, else it wouldn't really be a game.
@@ -166,6 +175,7 @@ Scenes associated to the levels are defined in the "level tree" (TODO: LINK LEVE
 A game graph can have more than one level state in specific cases, but in general one is enough.
 (TODO: show different graph examples with several level states...?)
 
+
 ## Transitions
 
 Graphs generally have a starting state, but this is not mandatory: a game graph can for example start from a different state when beginning a new game or when continuing a previously saved game.\
@@ -180,6 +190,7 @@ Different types of transitions are managed, depending on how they've been define
 
 Transitions are triggered using *actions*, which correspond to calling specific methods in the graph manager.\
 *actions* are defined in state controllers(TODO: LINK STATE CONTROLLER).
+
 
 ### Next
 
@@ -196,6 +207,7 @@ If no *next* state is specified, an implicit transition to the *parent* state is
 (**TODO:** mention here? "to trigger the transition, call `End`")
 
 A *parent* state is a state for which a list of *child* transitions are defined.
+
 
 ### Child
 
@@ -218,6 +230,7 @@ An example of a state with *child* nodes is as follows:
 
 (**TODO:** mention here? "to trigger a child transition, call `LoadChildState(<STATE_NAME>)`")
 
+
 ### Leave
 
 To exit a graph, one can simply load another scene.\
@@ -229,24 +242,14 @@ To add a bit of control, it is not allowed to leave the graph from any state: a 
 
 (**TODO:** mention here? "to trigger the transition, call `Leave` with the target scene name as parameter, or nothing to leave the application")
 
-## Graph Managers
-
-Graphs must be set respectively in the `GlobalManager` and `GameManager` prefabs which will be instantiated in the state scenes:
-* The global graph needs to be attached to the `Global State Graph` property of the `GlobalManager` script component.
-* The game graph needs to be attached to the `Game State Graph` property of the `GameManager` script component.
-
-![GlobalManager & GameManager graphs](./docs/images/manager_graphs.jpg "GlobalManager & GameManager graphs")
-
-Default graphs are already set in both prefabs, but can be replaced by custom ones.
-These default graphs are located in the `StateEngine/Resources/Xml` project's folder, as `global_states.xml` and `game_states.xml` respectively.
-
 
 # Data
 
 The engine provides management of data to be used by the application.
 Global data and game data can be defined, and will be available for use from within the associated graph.
 
-Global data generally comprises the main game settings, and game data represents the ingame values, such as the unmber of lives, points, etc.
+Global data generally comprises the main game settings, and game data represents the ingame values, such as the number of lives, points, etc.
+
 
 ## Definition
 
@@ -255,6 +258,7 @@ For the game data, game specific data fields can to be defined in an XML file.
 > **NOTE:** Currently an XML file is only handled for game data and not global data. Global data can still be defined and used in code, but is not managed automatically as the game data.
 
 The XML file must follow a specific structure, defining common fields as well as fields associated to a specific difficulty level (TODO: LINK DIFFICULTY).
+
 
 ### Difficulty Levels
 
@@ -291,6 +295,7 @@ They can also be defined as the other game data fields(TODO: LINK GAME FIELDS), 
 
 The 2 fields can also be omitted, and default values will be used (1 life, 0 continues).
 
+
 ### Game Fields
 
 Lives and continues can be enough for some games, but generally more data is needed (common ones such as health, points, etc.).
@@ -322,31 +327,38 @@ Here is an example of a basic game data file adding data for health and points m
 Depending on which difficulty level is set when starting the game, the player will have different numbers of lives and continues.\
 The starting health value also varies depending on the difficulty level, whereas points starting value is the same for all difficulties.
 
+
+(TODO: MOVE/REMOVE - to GRAPH MANAGERS?)
 This file is provided as default in `Resources/Xml/values.xml`.
 A custom file can be used instead, by setting it for the "Game Data" property in both `GlobalManager` and `GameManager` prefabs.
 
+
 ## Usage
 
-Data fields are handled by session manager scripts, providing ways to load and save the fields persistent values. Persistent values are kept between states.\
+Data fields are handled by session manager scripts, providing ways to load and save the fields persistent values. Persistent values are kept between states.
+
+The data fields can then be managed by data managers, controlling when to modify or restore the fields values.
+This requires data manager scripts to be created. Base abstract classes are provided for global and game data respectively.
+
 These managers are controlled be the graph managers.
 
-The data fields can then be managed by data manager, which control when to modify or restore the fields values.
-The data manager scripts need to be edited to use the new fields.
+To summarize:
+* Graph managers handle session and data managers.
+* Session managers manage data persistent values.
+* Data managers manage data current values, via orverridden scripts.
 
-To summarize, graph managers handle session and data managers. Data managers manage the fields current values, while session managers manage their persistent values.
 
 ### Game Data
 
-The XML file containing the game specific data fields definitions, has to be attached to the graph managers through their "Game Data" property.
-This will allow the session managers to access the data definitions and create the fields to manage.
+To manage the game data fields from within the engine, a game data manager script must be created, named for example `GameDataManager`.
 
-Both `GlobalManager` and `GameManager` prefabs must have the (same) XML file set.
+The script should be an implementation of the `IGameDataManager` abstract class (defined in the script with the same name), overriding its abstract methods:
+* `LoadSpecifics`
+* `CommitChangesSpecifics`
+* `ResetLifeData`
+* `ResetContinueData`
 
-!["Game Data in both managers"](./docs/images/managers-prefab-gamedata.jpg "Game Data in both managers")
-
-To access the game data fields, edit the script component of the `GameDataManager` prefab (or replace the script component by a derived script or copy), and specify how the field values are persisted using the `GameSessionManager` script commands.
-
-For each game data field defined in the XML file:
+Then, for each game data field defined in the XML file:
 * Declare the game field as a public property:
 	```csharp
 	public int points { get; set; } = 0;
@@ -386,14 +398,106 @@ void GameSessionManager.Instance.SetField(string name, int value);
 
 ### Global Data
 
-Similarly, to access the global data fields, edit the script component of the `GlobalDataManager` prefab (or replace the script component by a derived script or copy), and specify how the field values are persisted using the `GlobalSessionManager` script commands.
+Similarly, to manage the global data fields from within the engine, a global data manager script must be created, named for example `GameDataManager`.
+
+The script should be an implementation of the `IGlobalDataManager` abstract class (defined in the script with the same name), overriding its abstract methods:
+* `LoadSpecifics`
+* `CommitChangesSpecifics`
 
 > **NOTE:** There is currently no handling of an XML file to define the global data fields.
 
-For each global data field, changes should be made in the data manager script:
+Then, for each global data field:
 * Declare the global field as a public property.
 * Load its persisted value in `LoadSpecifics`.
 * Save its value in `CommitChangesSpecifics`.
+
+
+# Graph Managers
+
+The main components of the state engine are the graph managers.
+They manage the states and the transitions between them, as well as the data.
+
+A graph manager game object needs to be present in every state scene(TODO: LINK SCENES):
+* global state scenes must contain a global graph manager,
+* game state scenes must contain a game graph manager.
+
+(TODO: rewrite)
+A graph manager game object is composed of:
+* A `GlobalManager|GameManager` script component, with:
+	* A `GlobalStateManager|GameStateManager` prefab.\
+		This game object will be shared between all states as a unique instance.
+	* A `GlobalDataManager|GameDataManager` prefab.
+	* A `GlobalStateGraph|GameStateGraph` text asset.
+	* A `GameData` text asset (*).
+* A `GlobalStateControler|GameStateController` script component.\
+	This component is specific to each state, and can be replaced by overridden script when desired (TODO: see below - link?).
+
+Optionally, a game graph manager can contain and manage a global data manager, if access to the global data is needed.
+
+
+[^1]: The XML file containing the game specific data fields definitions has to be attached to both graph managers through their `Game Data` property. The same file must be set for both managers.
+
+Pre-built prefabs are provided for the graph managers to facilitate the setup, only requiring their properties to be set.
+However, if desired, new ones can easily be built from scratch (and could be part of other game objects - even if this is not recommended).
+
+Alternatively, fully set up prefabs are also provided in the samples(TODO: LINK SAMPLES - eg: GlobalManagerBasic).
+
+
+## Global Manager
+
+To build a global manager prefab from the pre-built prefab `GlobalManager`:
+
+- Prerequisites: make sure to have: (see previous sections - TODO: add links?) (these can also be obtained from the provided samples)
+	- A global data manager script implementing `IGlobalDataManager`, eg: `GlobalDataManager.cs`.
+	- A global state graph XML file, eg: `global_states.xml`.
+	- A game data XML file, eg: `values.xml`.[^1]
+- create a `GlobalDataManager` prefab from the script with the same name
+	- Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the hierarchy(...).
+	- Save the prefab.
+- create the global graph manager game object:
+	- instantiate the `GlobalManager` prefab.
+		Should already have a `GlobalStateManager` prefab set for its `Global State Manager` porperty, as well as a `GlobalStateController` script component attached to it.[^2]
+	- set the `GlobalManager` prefab properties:
+		- set the `GlobalDataManager` prefab for the `Global Data Manager` property
+		- set the `global_states` XML file for the `Global States Graph` property
+		- set the `values` XML file for the `Game Data` property
+	- save the prefab (as a variant, or replacing the original).
+
+[^1]: The global graph managers need to have access to the game data definitions, as some of it is required when starting or loading a game. No game data manager script is needed here though.
+
+[^2]: The default `GlobalStateController` script is enough for basic states and common *actions*. However, if specific operations or *actions* are needed, the *state controller* (TODO: LINK ...STATE CONTROLLERS?) script component should be replaced by a new script overriding the class.
+
+![Global Manager](./docs/images/globalmanager.jpg "Global Manager")
+
+
+## Game Manager
+
+To build a game manager prefab from the pre-built prefab `GameManager`:
+
+- Prerequisites: make sure to have: (see previous sections - TODO: add links?) (these can also be obtained from the provided samples)
+	- A game data manager script implementing `IGameDataManager`, eg: `GameDataManager.cs`.
+	- Optionally a global data manager script implementing `IGloalDataManager`, eg: `GlobalDataManager.cs`.
+	- A game state graph XML file, eg: `game_states.xml`.
+	- A game data XML file, eg: `values.xml`.
+- create a `GameDataManager` prefab from the script with the same name
+	- Either create an empty object and add a `GameDataManager` script component, or drag and drop the script in the hierarchy(...).
+	- Save the prefab.
+- Optionally create a `GlobalDataManager` prefab from the script with the same name
+	- Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the hierarchy(...).
+	- Save the prefab.
+- create the game graph manager game object:
+	- instantiate the `GameManager` prefab.
+		Should already have a `GameStateManager` prefab set for its `Game State Manager` porperty, as well as a `GameStateController` script component attached to it [^1].
+	- set the `GameManager` prefab properties:
+		- set the `GameDataManager` prefab for the `Game Data Manager` property
+		- optionally check the `Use Global Data Manager` checkbox and set the `GlobalDataManager` prefab for the `Global Data Manager` property 
+		- set the `game_states` XML file for the `Game States Graph` property
+		- set the `values` XML file for the `Game Data` property
+	- save the prefab (as a variant, or replacing the original).
+
+[^1]: The default `GameStateController` script is enough for basic states and common *actions*. However, if specific operations or *actions* are needed, the *state controller* (TODO: LINK ...STATE CONTROLLERS?) script component should be replaced by a new script overriding the class.
+
+![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
 
 
 # Scenes
@@ -421,25 +525,8 @@ For each state:
 
 ## Graph Manager
 
-(TODO: split in global & local?)\
-
-Either `GlobalManager` or `GameManager` prefabs for global states and game states respectively.
-
-(TODO: rewrite)
-Graph management prefab contains:
-- `GlobalManager|GameManager` script component, with:
-	- `GlobalStateManager|GameStateManager` prefab
-		=> This object will be shared between all states as a unique instance.
-	- `GlobalDataManager|GameDataManager` prefab
-	- `GlobalStateGraph|GameStateGraph` text asset
-- `GlobalStateControler|GameStateController` script component
-	=> This component is specific to each state, and should be replaced by overridden script when required (see below).
-
-TODO: REWRITE
-The default `GlobalStateGraph` and `GameStateGraph` XML files can be changed... (TODO: LINK TO GRAPHS SECTION)
-
-The default `GlobalStateController` and `GameStateController` scripts are enough for basic states and common *actions*.
-However, if specific operations or *actions* are needed, the *state controller* (TODO: LINK BELOW) script component should be replaced by a new script overriding the class.
+TODO: need to instantiate graph manager prefab in each scene...
+...
 
 ## State Controller & Actions
 
@@ -775,11 +862,14 @@ Default empty values, meaning the transition is ignored.
 ...
 
 
-# Default / Working example
-(TODO: RENAME!)
+
+
+
+# Samples
 
 Ready to use graphs and managers...
-
++full project
+...
 
 ## Global
 

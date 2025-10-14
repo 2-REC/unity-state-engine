@@ -29,6 +29,8 @@ Samples are provided with the engine(TODO: LINK SAMPLES), allowing to use the en
 
 # Project Setup
 
+> **NOTE:** This will be changed when project becomes a package.
+
 First part consist in making the Unity project ready to use the engine.
 
 * Download the latest release (or clone the repository for latest changes).
@@ -39,8 +41,6 @@ First part consist in making the Unity project ready to use the engine.
 	Any type of project can be created depending on the desired game type. The state engine is independent of the project type.
 
 * Copy the `StateEngine` directory from the extracted repository to the project's `Assets` folder.\
-	**TODO:** Not everything needs to be copied - see minimal that can be used (remove XML files, prefabs, tests, etc.)
-		+ clean useless/obsolete files!
 
 * Set scripts execution order.\
 	Some scripts need to be executed early at the start of the application for proper initializations.
@@ -54,24 +54,24 @@ First part consist in making the Unity project ready to use the engine.
 
 # State Graphs
 
-The state engine manages state transitions based on **graphs**.
+The state engine manages state transitions based on **graphs**(TODO: LINK "State Graphs -> Graphs").
 
-Graphs are composed of **states** and **transitions** between these states.
+Graphs are composed of **states**(TODO: LINK "State Graphs -> States") and **transitions**(TODO: LINK "State Graphs -> Transitions") between these states.
 
-The graphs are managed by **graph managers**(TODO: LINK GRAPH MANAGERS).
+The graphs are managed by **graph managers**(TODO: LINK "Graph Managers").
 
 
 ## Graphs
 
-A game project ideally contains manage 2 graphs:
-* Global Graph: Starting point of the application, allowing to start play sessions.
-* Game Graph: The game itself, handling a play session.
+A game project typically contains 2 graphs:
+* **Global Graph**(TODO: LINK "Graphs -> Global Graph"): Starting point of the application, allowing to start play sessions.
+* **Game Graph**(TODO: LINK "Graphs -> Game Graph"): The game itself, handling a play session.
 
 > **NOTE:** It is possible to have only a game graph.
 This however requires a specific initialization, which would normally be made by the global graph (TODO: LINK to section with 'initGame')
 
 Graphs are defined in XML files.
-They can be created manually or by using the [graph generation tool](TODO: LINK PROJECT)
+They can be created manually or by using the [unity-state-engine-graphview](https://github.com/2-REC/unity-state-engine-graphview) tool.
 
 
 ### Global Graph
@@ -81,23 +81,25 @@ Graph used at the global level, when launching the application.
 The global graph manages the high-level structure of the game.
 It serves as the starting point for the application, and manages the starting of play sessions.
 
-In order to have a working game, the handling of essential *actions* (TODO: LINK STATE CONTROLLER) is required in a global graph:
+In order to have a working game, the handling of essential **actions** (TODO: LINK STATE CONTROLLER) is required in a global graph:
 * `NewGame`: Start a new game.
 * `Quit`: Leave the application.
 
-Additionally, other common global *actions* include:
+Additionally, other common global actions include:
 * `LoadGame`: Load a previously saved game.
 * `Continue`: Continue the current game.
 
-All the *actions* can be handled in a single state, or can be handled independently in different states.
-Typically, a global graph will have a main state (presenting a main menu), with transitions to other states, each handling a specific *action*.
+All the actions can be handled in a single state, or can be handled independently in different states.
+Typically, a global graph will have a main state (presenting a main menu), with transitions to other states, each handling a specific action.
 
-A global graph can also contain other states with specific roles, including:
+A global graph can also contain other states with specific roles, such as:
 * Studio logo screen
 * Introduction video sequence
 * Game settings screen
 * Game credits
 * etc.
+
+An example of a global graph is presented in the sample projects(TODO: LINK "Samples").
 
 
 ### Game Graph
@@ -106,14 +108,18 @@ Graph used at the game level, when starting or loading a play session.
 
 The graph manages the game itself, coordinating the game levels.
 
-A game graph must have a special "level" state, which will hold the playable elements of the game (TODO: LINK LEVEL STATE).
+A game graph must have a special "*level*" state, which will hold the core playable elements of the game (TODO: LINK LEVEL STATE).
 
-A state that is common to many games is a "map" state, presenting a level selection screen or a view of the game world.
+Another state common to many games is a "*map*" state.
+This state is optional, but is useful for presenting a level selection screen or a view of the game world, managing the **level tree**(TODO: LINK LEVEL TREE).
 
-Other states can be:
-- TODO: (examples: begin anim, briefing, etc)
+Other game specific states can be included in the graph, such as:
+* Pre- and post-level cut scene
+* Level briefing and debriefing
+* Game Over screen
+* etc.
 
-As for the global graph, handling essential *actions* is required in a game graph:
+As for the global graph, handling essential actions is required in a game graph:
 * `StartLevel`: Start a new level.
 * `EndLevel`: Finish the current level (with success or failure).
 * `CheckGameComplete`: Determine if the game is over by reaching its end objective.
@@ -122,14 +128,16 @@ As for the global graph, handling essential *actions* is required in a game grap
 * `UseContinue`: Resume the game from a previous state.
 * `QuitGame`: Leave the game.
 
-Additionally, other common global *actions* include:
+Additionally, other common global actions include:
 * `QuitLevel`: Leave the current level.
 * `SaveGame`: Save the game in its current state.
 
-The `EndLevel` and `QuitLevel` *actions* must be handled in the "level" state directly.\
-All the other *actions* except `StartLevel` can be handled in the "level" state, or handled independently in different states.
+The `EndLevel` and `QuitLevel` actions must be handled in the "*level*" state directly.\
+All the other actions can be handled independently in any state.
 
 Actions are described in more details in ...(TODO: LINK STATE CONTROLLER).
+
+An example of a game graph is presented in the sample projects(TODO: LINK "Samples").
 
 
 ## States
@@ -141,16 +149,16 @@ States are defined by a `<state>` node, taking a set of attributes:
 	This id is also used internally by the engine.
 * `scene`: The name of the scene corresponding to the state (name without extension).\
 	Scene names must be unique in order to avoid ambiguity and potential issues. A scene can however be shared between several states.
-* `restartable`(*): A boolean specifying if when coming back from a child state (**TODO:** see transitions), the state is restarted instead of transitionning to its "next" state.\
+* `restartable`[*]: A boolean specifying if when coming back from a child state (**TODO:** see transitions), the state is restarted instead of transitionning to its "next" state.\
 	By default, a state is not restartbale, in which case the attribute can be omitted.
-* `next`(*): The `id` of the "next" state in the graph execution.\
+* `next`[*]: The `id` of the "next" state in the graph execution.\
 	When a state has finished its execution, an automatic transition can be triggered to this other state.\
 	The attribute can be omitted, in which case the "next" transition will switch to the parent state.
-* `leavable`(*): A boolean specifying if the engine can exit the current graph from this state.\
+* `leavable`[*]: A boolean specifying if the engine can exit the current graph from this state.\
 	By default, a state is not leavable, in which case the attribute can be omitted.\
 	**NOTE:** Nothing prevents the aplication from leaving the graph from any state, but this allows some control from within the graph execution.
 
-(*): More information about these attributes is provided in "transitions" (TODO: LINK TRANSITIONS)
+[*]: More information about these attributes is provided in "transitions" (TODO: LINK TRANSITIONS)
 
 Here is an example of a game state definition:
 ```xml
@@ -160,20 +168,20 @@ Here is an example of a game state definition:
 
 ### Level State
 
-A game graph should contain a level state, else it wouldn't really be a game.
+A game graph should contain a "*level*" state, where the actual gameplay takes place.
 
-The level state will generally be shared between all game levels, and for that it doesn't have a single corresponding scene as for the other states.
+The "*level*" state will generally be shared between all game levels, thus a single scene cannot be associated to it, as opposed to the other states.
 
-For this reason, the level state in a game graph has a specific attribute: `isLevel`:
+For this reason, the "*level*" state in a game graph must have a specific `isLevel` attribute set:
 ```xml
 <state id="LEVEL" isLevel="true" />
 ```
-When the graph manager finds a state with this attribute set, it ignores the state's `scene` attribute (which can thus be ignored for that state).
+When the graph manager finds a state with this attribute set, it ignores the state's `scene` attribute (which is thus useless for that state and can be omitted from its definition).
 
-Scenes associated to the levels are defined in the "level tree" (TODO: LINK LEVEL TREE).
+Scenes associated to the levels are defined in the "level tree"(TODO: LINK LEVEL TREE).
 
 A game graph can have more than one level state in specific cases, but in general one is enough.
-(TODO: show different graph examples with several level states...?)
+(TODO: show different graph examples with several level states...? - LINK TO ANNEXES?)
 
 
 ## Transitions
@@ -188,8 +196,8 @@ Different types of transitions are managed, depending on how they've been define
 * *child* transition
 * *leave* transition
 
-Transitions are triggered using *actions*, which correspond to calling specific methods in the graph manager.\
-*actions* are defined in state controllers(TODO: LINK STATE CONTROLLER).
+Transitions are triggered using **actions**, which correspond to calling specific methods in the graph manager.\
+Actions are defined in **state controllers**(TODO: LINK STATE CONTROLLER).
 
 
 ### Next
@@ -204,7 +212,8 @@ An example of a state with a *next* transition is as follows:
 ```
 
 If no *next* state is specified, an implicit transition to the *parent* state is triggered when the state's executionn has ended (if there is no *parent* state, the application quits).
-(**TODO:** mention here? "to trigger the transition, call `End`")
+
+A *next* transition is triggered by calling the state controller's `End` method.
 
 A *parent* state is a state for which a list of *child* transitions are defined.
 
@@ -228,7 +237,7 @@ An example of a state with *child* nodes is as follows:
 </state>
 ```
 
-(**TODO:** mention here? "to trigger a child transition, call `LoadChildState(<STATE_NAME>)`")
+A *child* transition is triggered by calling the state controller's `LoadChildState` method, with the child state name as parameter.
 
 
 ### Leave
@@ -236,28 +245,28 @@ An example of a state with *child* nodes is as follows:
 To exit a graph, one can simply load another scene.\
 However, this is not advised, as it would not properly stop the graph manager and could create unexpected behavior.
 
-To properly leave a graph, a specific command must be used (TODO: LINK), which will make sure everything is cleaned before leaving.
+To properly leave a graph, a specific command must be used, which will make sure everything is cleaned before leaving.
 
 To add a bit of control, it is not allowed to leave the graph from any state: a state must have its `leavable` attribute set to allow the transition outside of the graph.
 
-(**TODO:** mention here? "to trigger the transition, call `Leave` with the target scene name as parameter, or nothing to leave the application")
+The transition is triggered by calling the state controller's `Leave` method, with the target scene name as parameter (or no parameter to leave the application).
 
 
 # Data
 
-The engine provides management of data to be used by the application.
+The engine provides an easy way to manage data to be used by the application.
 Global data and game data can be defined, and will be available for use from within the associated graph.
 
-Global data generally comprises the main game settings, and game data represents the ingame values, such as the number of lives, points, etc.
+Global data generally comprises the main game settings, and game data represents the ingame values such as the number of lives, points, etc.
 
 
 ## Definition
 
-For the game data, game specific data fields can to be defined in an XML file.
+For the game data, game specific **data fields**(TODO: LINK GAME DATA FIELDS) can to be defined in an XML file.
 
 > **NOTE:** Currently an XML file is only handled for game data and not global data. Global data can still be defined and used in code, but is not managed automatically as the game data.
 
-The XML file must follow a specific structure, defining common fields as well as fields associated to a specific difficulty level (TODO: LINK DIFFICULTY).
+The XML file must follow a specific structure, essentially divided in 2 parts: *common* fields as well as fields associated to a specific *difficulty level*.
 
 
 ### Difficulty Levels
@@ -276,38 +285,38 @@ TODO: OK if no 'common' block? => Change code if needed!
 ### Lives & Continues
 
 TODO: rewrite
-Almost any game can be said to at least have common basics:
-- levels, which can be won or lost (success or failure)
-- lives, specifying the number of attempts to complete a goal or a level
-- continues, specifying the number of times the player can resume the game after having lost all their lives or failing an objective, instead of being forced to start completely over.
+Almost any game is based around common basic components:
+- **levels**, which can be won or lost (success or failure)
+- **lives**, specifying the number of attempts available to complete a goal or a level
+- **continues**, specifying the number of times the player can resume the game after having lost all their lives or failing an objective, instead of being forced to start completely over.
 
-The state engine automatically handles these essential game elements, and game fields are already defined and managed for the number of lives and continues.
+The state engine automatically handles these essential game elements, and 
+already manages game fields for the number of lives and continues.
 
 When a player fails an objective (to be defined by the game), they lose a life.\
 When all lives are lost, a continue can be used to retry (resetting the number of lives).\
 When all continues have been used, the game is over.
 
-The number of lives and continues are associated to difficulty levels, and can be added as direct attributes of the `<difficulty>` nodes, named respectively `lives` and `continues`:
+The number of lives and continues are generally associated to difficulty levels, and can be added as direct attributes to the `<difficulty>` nodes, named respectively `lives` and `continues`:
 ```xml
 <difficulty lives="5" continues="2" />
 ```
-They can also be defined as the other game data fields(TODO: LINK GAME FIELDS), using the "LIVES" and "CONTINUES" identifiers.
+They can also be defined the same way as the other game data fields(TODO: LINK GAME FIELDS), using the "LIVES" and "CONTINUES" identifiers.
 
 The 2 fields can also be omitted, and default values will be used (1 life, 0 continues).
 
 
-### Game Fields
+### Game Data Fields
 
-Lives and continues can be enough for some games, but generally more data is needed (common ones such as health, points, etc.).
+Lives and continues can be enough for some games, but generally other data fields are needed (common ones such as health, points, etc.).
 
 Additional game specific data fields can be defined and used where needed in the engine.
 
 To add game data fields to the XML file, the `<field>` node is used.
-It can be added in the `<common>` node or in the `<difficulty>` nodes.
+They can be added in the `<common>` node or in the `<difficulty>` nodes.
 
 Here is an example of a basic game data file adding data for health and points management:
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
 <values>
     <common>
         <field name="POINTS" value="0" />
@@ -327,20 +336,17 @@ Here is an example of a basic game data file adding data for health and points m
 Depending on which difficulty level is set when starting the game, the player will have different numbers of lives and continues.\
 The starting health value also varies depending on the difficulty level, whereas points starting value is the same for all difficulties.
 
-
-(TODO: MOVE/REMOVE - to GRAPH MANAGERS?)
-This file is provided as default in `Resources/Xml/values.xml`.
-A custom file can be used instead, by setting it for the "Game Data" property in both `GlobalManager` and `GameManager` prefabs.
+Example files are provided in the samples(TODO: LINK SAMPLES).
 
 
-## Usage
+## Data Managers
 
-Data fields are handled by session manager scripts, providing ways to load and save the fields persistent values. Persistent values are kept between states.
+Data fields are handled by **session managers**, providing ways to load and save the fields persistent values. Persistent values are kept between states.
 
-The data fields can then be managed by data managers, controlling when to modify or restore the fields values.
+The data fields can then be managed by **data managers**, controlling when to modify or restore the fields values.
 This requires data manager scripts to be created. Base abstract classes are provided for global and game data respectively.
 
-These managers are controlled be the graph managers.
+These managers are controlled be **graph managers**.
 
 To summarize:
 * Graph managers handle session and data managers.
@@ -350,15 +356,16 @@ To summarize:
 
 ### Game Data
 
-To manage the game data fields from within the engine, a game data manager script must be created, named for example `GameDataManager`.
+To manage the game data fields from within the engine, a game data manager script must be created.
 
-The script should be an implementation of the `IGameDataManager` abstract class (defined in the script with the same name), overriding its abstract methods:
+The script should be an implementation of the `IGameDataManager` abstract class (defined in the script with the same name), overriding its abstract methods to call methods from the associated session manager.
+The methods to override are:
 * `LoadSpecifics`
 * `CommitChangesSpecifics`
 * `ResetLifeData`
 * `ResetContinueData`
 
-Then, for each game data field defined in the XML file:
+For each game data field defined in the XML file:
 * Declare the game field as a public property:
 	```csharp
 	public int points { get; set; } = 0;
@@ -383,12 +390,14 @@ Then, for each game data field defined in the XML file:
 	```
 	`ResetLifeData` will be called when losing a life, and `ResetContinueData` will be called when using a continue.
 
-To save the data fields current values and make them persistent for other states, the data manager `CommitChanges` method must be called.
-It can be called from anywhere by getting access to the game data manager:
+> **NOTE:** The creation of the script could be automated by parsing the XNL file and automatically adding the commands associated to each data field. This might be implemented in future versions of the project.
+
+To save the data fields current values and make them persistent for other states, the data manager `CommitChanges` method can be used.
+The method can be called from anywhere by getting access to the game data manager:
 ```csharp
 GetGameData().CommitChanges();
 ```
-For example, values should be saved when ending a level (when winning and/or losing).
+For example, some values should be saved when ending a level (when winning and/or losing).
 
 If want to manage fields independently, the session manager methods can be called directly:
 ```csharp
@@ -398,7 +407,7 @@ void GameSessionManager.Instance.SetField(string name, int value);
 
 ### Global Data
 
-Similarly, to manage the global data fields from within the engine, a global data manager script must be created, named for example `GameDataManager`.
+Similarly, to manage the global data fields from within the engine, a global data manager script must be created.
 
 The script should be an implementation of the `IGlobalDataManager` abstract class (defined in the script with the same name), overriding its abstract methods:
 * `LoadSpecifics`
@@ -414,125 +423,141 @@ Then, for each global data field:
 
 # Graph Managers
 
-The main components of the state engine are the graph managers.
+The main components of the state engine are the **graph managers**.
 They manage the states and the transitions between them, as well as the data.
 
 A graph manager game object needs to be present in every state scene(TODO: LINK SCENES):
-* global state scenes must contain a global graph manager,
-* game state scenes must contain a game graph manager.
+* global state scenes must contain a global graph manager(TODO: LINK GLOBAL MANAGER),
+* game state scenes must contain a game graph manager(TODO: LINK GAME MANAGER).
 
-(TODO: rewrite)
 A graph manager game object is composed of:
-* A `GlobalManager|GameManager` script component, with:
+* A `GlobalManager|GameManager` script component, with the following properties:
 	* A `GlobalStateManager|GameStateManager` prefab.\
-		This game object will be shared between all states as a unique instance.
+		This game object will be shared between all the states of a graph as a unique instance.
 	* A `GlobalDataManager|GameDataManager` prefab.
 	* A `GlobalStateGraph|GameStateGraph` text asset.
-	* A `GameData` text asset (*).
+	* A `GameData` text asset.\
+		The XML file containing the game specific data fields definitions has to be attached to both global and game graph managers through their `Game Data` property. The same file must be set for both managers.
 * A `GlobalStateControler|GameStateController` script component.\
-	This component is specific to each state, and can be replaced by overridden script when desired (TODO: see below - link?).
+	This component is specific to each state.\
+	The default scripts are enough for basic states and common actions, however, if additional operations or actions are needed for a state, the script can be replaced by a new script overriding the class in the instantiated prefab in that specific state's scene.
 
 Optionally, a game graph manager can contain and manage a global data manager, if access to the global data is needed.
 
-
-[^1]: The XML file containing the game specific data fields definitions has to be attached to both graph managers through their `Game Data` property. The same file must be set for both managers.
+Graph managers should be saved as prefabs, and reused in every state scene of their associated graph. The same prefab has to be used in every graph scene, with only the `GlobalStateControler|GameStateController` component eventually replaced by an overridden script in specific scenes.
 
 Pre-built prefabs are provided for the graph managers to facilitate the setup, only requiring their properties to be set.
-However, if desired, new ones can easily be built from scratch (and could be part of other game objects - even if this is not recommended).
+However, if desired, new ones can easily be built from scratch (or could be part of other game objects, though this is not recommended).
 
-Alternatively, fully set up prefabs are also provided in the samples(TODO: LINK SAMPLES - eg: GlobalManagerStarter).
+Alternatively, ready to use prefabs are also provided in the samples(TODO: LINK SAMPLES - eg: GlobalManagerStarter).
 
 
 ## Global Manager
 
-To build a global manager prefab from the pre-built prefab `GlobalManager`:
+A number of steps are required to build a global graph manager.
 
-- Prerequisites: make sure to have: (see previous sections - TODO: add links?) (these can also be obtained from the provided samples)
-	- A global data manager script implementing `IGlobalDataManager`, eg: `GlobalDataManager.cs`.
-	- A global state graph XML file, eg: `global_states.xml`.
-	- A game data XML file, eg: `values.xml`.[^1]
-- create a `GlobalDataManager` prefab from the script with the same name
-	- Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the hierarchy(...).
-	- Save the prefab.
-- create the global graph manager game object:
-	- instantiate the `GlobalManager` prefab.
-		Should already have a `GlobalStateManager` prefab set for its `Global State Manager` porperty, as well as a `GlobalStateController` script component attached to it.[^2]
-	- set the `GlobalManager` prefab properties:
-		- set the `GlobalDataManager` prefab for the `Global Data Manager` property
-		- set the `global_states` XML file for the `Global States Graph` property
-		- set the `values` XML file for the `Game Data` property
-	- save the prefab (as a variant, or replacing the original).
+**Prerequisites:** Before creating the game object, make sure to have the following components available (see previous sections on how to create them, or use the ones provided in the project samples):
+* A global data manager script implementing `IGlobalDataManager` (e.g.: `GlobalDataManager.cs`).
+* A global state graph XML file (e.g.: `global_states.xml`).
+* A game data XML file (e.g.: `values.xml`).\
+	The global graph manager needs to have access to the game data definitions, as some of them are required when starting or loading a game. No game data manager script is needed here though.
 
-[^1]: The global graph managers need to have access to the game data definitions, as some of it is required when starting or loading a game. No game data manager script is needed here though.
+Once the prerequisite components are available, the game object can be created:
+1. Create a **global data manager** prefab.
+	* Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
+	* Save the prefab. Name it `GlobalDataManager` for example.
+	* Delete the instantiated prefab in the *Hierarchy* panel.
+2. Create the **global graph manager** prefab:
+	* Instantiate the provided `GlobalManager` prefab.\
+		The prefab should already have a `GlobalStateManager` prefab set for its `Global State Manager` porperty, as well as a `GlobalStateController` script component attached to it.[*]
+	* Set the `GlobalManager` prefab properties:
+		* Set the `GlobalDataManager` prefab for the `Global Data Manager` property (the prefab itself, **NOT** an instance).
+		* Set the `global_states` XML file for the `Global States Graph` property.
+		* Set the `values` XML file for the `Game Data` property.
+	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
 
-[^2]: The default `GlobalStateController` script is enough for basic states and common *actions*. However, if specific operations or *actions* are needed, the *state controller* (TODO: LINK ...STATE CONTROLLERS?) script component should be replaced by a new script overriding the class.
+	![Global Manager](./docs/images/globalmanager.jpg "Global Manager")
 
-![Global Manager](./docs/images/globalmanager.jpg "Global Manager")
+[*]: The `GlobalStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
 
 
 ## Game Manager
 
-To build a game manager prefab from the pre-built prefab `GameManager`:
+As for the global graph manager, a number of steps are required to build a game graph manager.
 
-- Prerequisites: make sure to have: (see previous sections - TODO: add links?) (these can also be obtained from the provided samples)
-	- A game data manager script implementing `IGameDataManager`, eg: `GameDataManager.cs`.
-	- Optionally a global data manager script implementing `IGloalDataManager`, eg: `GlobalDataManager.cs`.
-	- A game state graph XML file, eg: `game_states.xml`.
-	- A game data XML file, eg: `values.xml`.
-- create a `GameDataManager` prefab from the script with the same name
-	- Either create an empty object and add a `GameDataManager` script component, or drag and drop the script in the hierarchy(...).
-	- Save the prefab.
-- Optionally create a `GlobalDataManager` prefab from the script with the same name
-	- Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the hierarchy(...).
-	- Save the prefab.
-- create the game graph manager game object:
-	- instantiate the `GameManager` prefab.
-		Should already have a `GameStateManager` prefab set for its `Game State Manager` porperty, as well as a `GameStateController` script component attached to it [^1].
-	- set the `GameManager` prefab properties:
-		- set the `GameDataManager` prefab for the `Game Data Manager` property
-		- optionally check the `Use Global Data Manager` checkbox and set the `GlobalDataManager` prefab for the `Global Data Manager` property 
-		- set the `game_states` XML file for the `Game States Graph` property
-		- set the `values` XML file for the `Game Data` property
-	- save the prefab (as a variant, or replacing the original).
+**Prerequisites:** Before creating the game object, make sure to have the following components available (see previous sections on how to create them, or use the ones provided in the project samples):
+* A game data manager script implementing `IGameDataManager` (e.g.: `GameDataManager.cs`).
+* A game state graph XML file (e.g.: `game_states.xml`).
+* Optionally a global data manager script implementing `IGlobalDataManager` (e.g.: `GlobalDataManager.cs`).
+* A game data XML file (e.g.: `values.xml`).
 
-[^1]: The default `GameStateController` script is enough for basic states and common *actions*. However, if specific operations or *actions* are needed, the *state controller* (TODO: LINK ...STATE CONTROLLERS?) script component should be replaced by a new script overriding the class.
+Once the prerequisite components are available, the game object can be created:
+1. Create a **game data manager** prefab.
+	* Either create an empty object and add a `GameDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
+	* Save the prefab. Name it `GameDataManager` for example.
+	* Delete the instantiated prefab in the *Hierarchy* panel.
+2. Optionally create a **global data manager** prefab from the script with the same name.
+	* Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
+	* Save the prefab. Name it `GlobalDataManager` for example.
+	* Delete the instantiated prefab in the *Hierarchy* panel.
+3. Create the **game graph manager** prefab:
+	* Instantiate the provided `GameManager` prefab.\
+		The prefab should already have a `GameStateManager` prefab set for its `Game State Manager` porperty, as well as a `GameStateController` script component attached to it.[*]
+	* Set the `GameManager` prefab properties:
+		* Set the `GameDataManager` prefab for the `Game Data Manager` property (the prefab itself, **NOT** an instance).
+		* Optionally check the `Use Global Data Manager` checkbox and set the `GlobalDataManager` prefab for the `Global Data Manager` property.
+		* Set the `game_states` XML file for the `Game States Graph` property.
+		* Set the `values` XML file for the `Game Data` property.
+	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
 
-![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
+	![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
+
+[*]: The `GameStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
 
 
 # Scenes
 
-Each state requires an associated scene, which must satisfy the following requirements:
-* Scene name as defined in the corresponding state graph (`scene` attribute).
-* Must contain a graph management object:
+Every state requires an associated scene, which must satisfy the following requirements:
+* The scene name must be the same as the one defined in the corresponding state graph (`scene` attribute of a `<state>`).
+* The scene must contain a graph management object:
 	* `GlobalManager` prefab for global states.
 	* `GameManager` prefab for game states.
 * The scene must be added in the project's scene list (in build profiles).
 
-**NOTE:** The starting scene (first one in the project's build settings) must be the one associated to the state defined as entry point in the global state graph.
+**NOTE:** The starting scene (first one in the project's build settings) should be the one associated to the state defined as entry point in the global state graph.
 
-Additionally, depending on the state's attributes and transitions, certain *actions* (TODO: LINK STATE CONTROLLER) are expected to be executed following specific events.
-...
+Additionally, depending on the state's attributes and transitions, certain actions(TODO: LINK STATE CONTROLLER) are expected to be executed in certain conditions.
 
-TODO: process:
-For each state:
-* Create a new scene(*).
-* Instantiate a graph management prefab(TODO: LINK GRAPH MANAGER), either global or game, depending on which graph the state belongs to.
-* If needed, override and replace the state controller script in the graph manager for the specific state(TODO: LINK STATE CONTROLLER).
+The scene creation process is as follows:
+* Create a new scene and add it the project's scenes list.[*]
+* Instantiate either a global or game graph management prefab(TODO: LINK GRAPH MANAGERS), depending on which graph the state belongs to.
+* If needed, override and replace the state controller(TODO: LINK STATE CONTROLLER) script in the graph manager for the specific state.
 
-(*): A scene can be shared between several states.
+[*]: A scene can be shared between several states.
 
 
-## Graph Manager
+## State Controller
 
-TODO: need to instantiate graph manager prefab in each scene...
-...
+The state controller in a graph manager handles the state specific logic and transitions.
 
-## State Controller & Actions
+As described earlier(TODO: LINK TRANSITIONS), transitions are triggered using actions.
+An action is a method defined in a state controller script, which can be called from within a state.
 
-Define specific state *actions*(?) by overriding the state controller script.
+Basic transition actions are directly available in the default `GlobalStateController|GameStateController` script component attached to the graph manager:
+* `End`: Trigger transition to the *next* state.
+* `LoadChildState`: Trigger transition to a *child* state.\
+	The method takes a state name as parameter.\
+	The specified state must be defined as a *child* state in the graph, else an error will be raised.
+* `Leave`: Trigger transition to another scene, leaving the current graph.\
+	The method takes a scene name as parameter.
 
-For example, specific state initializations can be done in overridden `HandleMainState`.
+More actions can be defined for a state by overriding the state controller script and replacing it in the graph manager instance.
+
+> **NOTE:** The `StateController` script component should be overridden in the graph manager prefab **instance** in the scene, not in the prefab itself (unless changes should be available for every state in the graph).
+
+!["State Controller component of Graph Manager"](./docs/images/gamemanager-statecontroller.jpg "State Controller component of Graph Manager")
+
+Additionally, specific state initializations can be done by overriding the `HandleMainState` method.
 
 Example of a game state override, using the player's number of lives:
 ```csharp
@@ -550,28 +575,8 @@ public class LevelState : GameStateController {
 }
 ```
 
-As seen previoulsy, transitions are triggered using *actions*.\
-An *action* is a method defined in a state controller script, which can be called from within a state.
 
-Basic transition *actions* are directly available in the default `StateController` script:
-* `End`: Trigger transition to the *next* state.
-* `LoadChildState`: Trigger transition to a *child* state.\
-	The method takes a state name as parameter.\
-	The specified state must be defined as a *child* state in the graph, else an error will be raised.
-* `Leave`: Trigger transition to another scene, leaving the current graph.\
-	The method takes a scene name as parameter.
-
-More *actions* can be defined for specific operations(?) by overriding the state controller script.
-Example scripts are provided defining most of the common *actions* and can be used directly (TODO: LINK TO 'examples'?).
-
-
-(TODO: mention? where?
-automatic transitions:
-A "Timer" (script) can be added (global or not depending on graph) if want the state to be left after a period of time
-)
-
-
-### Global Graph Actions
+### Global State Actions
 
 ...specific global states
 handle main menu to start and load game sessions.
@@ -579,14 +584,14 @@ can also have game options, credits, etc.
 (TODO: redundant...? -> should not repeat to many times)
 
 TODO:...
-specific global *actions*
+specific global actions
 ... override `GlobalStateController` script and add specific methods:
 
 * `NewGame`: Start a new play session.\
 	Steps:
 	* Create a new game session with a specified difficulty level.\
-		Difficulty levels are defined in data values(TODO:LINK), starting from 0.\
-		The difficulty level can be provided as an input integer parameter to the method.
+		Difficulty levels are defined and handled by data managers(TODO:LINK DATA).\
+		The difficulty level is provided as an input integer parameter to the method (starting from 0).
 	* Leave the graph (transitionning to a state in the game graph).
 	```csharp
 	public void StartGame(int difficulty) {
@@ -594,15 +599,14 @@ specific global *actions*
 		Leave("<GAME_SCENE>");
 	}
 	```
-	where `<GAME_SCENE>` is the name of the game state's scene to load(*).
+	where `<GAME_SCENE>` is the name of the game state's scene to load.
 * `LoadGame`: Load a previously saved game.\
 	Steps:
 	* Determine saved game to load.\
-	The saved game identifier can be provided as parameter to the method.\
-	TODO: currently handling filenames as string, but should be saved slot ids/numbers? (str|int?)\
-	* Load a game session with the saved identifier.\
-	* Leave the graph if the loading was successful (transitionning to a state in the game graph).
-**TODO:** "+optional SetLevel, if skip Map state" => seems useless, already done when loading data (=> CHECK!)
+		The saved game identifier can be provided as parameter to the method.
+	* Load a game session with the saved game identifier.
+	* Leave the graph if the loading was successful (transitionning to a state in the game graph).\
+		This will indirectly set the current level by calling the game session manager's method `SetLevel`.
 	```csharp
 	public void StartGame(string filename) {
 		if(GameSessionManager.Instance.LoadGame(filename)) {
@@ -610,22 +614,10 @@ specific global *actions*
 		}
 	}
 	```
-	where `<GAME_SCENE>` is the name of the game state's scene to load(*).
+	where `<GAME_SCENE>` is the name of the game state's scene to load.
 * `Quit`: Leave the graph and close the application.\
-	No specific method is required for this *action*, as the `Leave` method can be called directly without parameter (no scene name).\
-	(**TODO: CHECK!!!!
-	Optionally, the current game session can be saved...:
-	TODO2: NEED TO DETERMINE FILENAME! (could be in game data/fields?)
-	```csharp
-    public void Quit() {
-        if (GameSessionManager.Instance.GetLevel() != -1) {
-	        GameSessionManager.Instance.SaveGame(filename);
-		}
-        Leave();
-    }
-	```
-	)
-	TODO: be consistent with 'play session' and 'game session')
+	No specific method is required for this action, as the `Leave` method can be called directly without parameter (no scene name).\
+	However, other operations could be done, such as saving the current game (using the game session manager's `SaveGame` method).
 * `Continue`: Go back to the current or last loaded game session.\
 	This can be done by directly calling the `Leave` method with the desired game state's scene name.\
 	To make sure a game session is actually loaded, a check on the current level can be added (if no level is set, the game will start from the first level).
@@ -636,37 +628,45 @@ specific global *actions*
 		}
 	}
 	```
-	where `<GAME_SCENE>` is the name of the game state's scene to load(*).
+	where `<GAME_SCENE>` is the name of the game state's scene to load.
 
-(*): TODO: here? "for scene names parameters, can add a `SceneProperty` property to the script, and get the scene name from its `name` attribute"
-
-> **NOTE:** The states implementing these *actions* **must have their `leavable` attribute set**, to be allowed to leave the current global graph when calling `Leave`.
+> **NOTE:** The states implementing these actions **must have their `leavable` attribute set**, to be allowed to leave the current global graph when calling `Leave`.
 
 
-(TODO: here? title OK?
 #### GLobal Actions in Game Graph
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!! TODO !!!!
 if no global graph, ...
-
-!!!! TODO: to use GlobalDataManager in game graph, ... !!!!
-(checkbox, set prefab, etc.)
+can use GlobalDataManager in game graph, ...(see Global Manager)
 + explain purpose and usage...
-
 REWRITE FROM:
 - in game states
     - possibility to "load global" (to init the game data, loaded when coming from global graph)
-        => allowing to test a game state/scene without to start from global graph.
+allow to not have global graph
++ also allowing to test a game state/scene without to start from global graph.
+
+by calling NewGame or LoadGame
+
 (TODO: check if put details here or leave in file...)
         "InitGame" script in "Tests/Game" (see script for use details).
-		(need to call NewGame or LoadGame)
 )
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-### Game Graph Actions
+### Game State Actions
 
-...specific game states
-must at least have a "level" state (TODO: LINK LEVEL) handling the gameplay(?).
+TODO:...
+specific game states
+... override `GameStateController` script and add specific methods for additional actions.
 
-Available game specific *actions*:
+
+as seen previously,
+there are some common expected actions(TODO: LINK?) which can be executed in any state of the game graph.
+Some actions however must be handled by a "*level*" state (TODO: LINK LEVEL), which will have its own state controller: the **Level Controller**(TODO: LINK LEVEL CONTROLLER).
+
+
+...some game specific actions:
 
 * `StartLevel`: Start a level.\
     Typically in a "map" state if exists.\
@@ -700,59 +700,80 @@ Available game specific *actions*:
 - Save
     GameSessionManager.Instance.SaveGame(str|int?)
 
-
-TODO:...
-...override `GameStateController` script and add methods for additional *action*.
-
+* `QuitGame`: Leave the game graph and switch to the global graph.
+	```csharp
+    public void QuitGame() {
+        Leave("<GLOBAL_SCENE>");
+    }
+	```
+	where `<GLOBAL_SCENE>` is the name of the global state's scene to load.
 
 
 # Levels
 
-...
-Mandatory state... (can have more than 1)
-very specific,
-required operations...
-- 1 common script
-- 1 scene per level (or not)
-- defined in 'levels.xml'
-(TODO: make subsections: "Level Graph"?, "Level Manager"?, "Level Scenes"...?)
+Levels are managed by a specific state in the game graph: the "*level*" state.
 
-## Level Tree / Level Graph?
+Generally, a game graph will only have 1 "*level*" state, managing all the levels, but it is possible to have more than 1 if specific transitions are desired for some levels.
+(TODO: describe/show example - here or in annexes?)
+
+The order and hierachy of levels in the game are defined by a **level tree**(TODO: LINK LEVEL TREE).
+
+Each level must have an associated **level scene**(TODO: LINK LEVEL SCENES), which is also specified in the level tree.
+
+Levels are expected to execute a number of actions, requiring a specific state controller script: the **Level Controller**(TODO: LINK LEVEL CONTROLLER).
+
+
+## Level Tree
+
 TODO: explain level tree stuff (xml, level files, etc.)
+
+- 'levels.xml'
+	each level has an associated scene
+	but a same scene can be shared by several levels.
+
+- scene file
+
+- level files (optional?)
+	=> can be anything, depending on the level ~implementation.
+		typically 'high-level' description files, providing links to other resources associated to the level.
+		eg tilemap files, animation sequences, dialogs, etc.
+	(These files can thus in turn point to other files)
+
+- ...?
+
+
 
 ## Level Scenes
 TODO...
 
-TODO: CHECK FOR LEVEL NAMES!
+scene names defined in 'levels.xml'
+
+(TODO: CHECK FOR LEVEL NAMES! - NOT ANYMORE THE CASE (?)
 OLD?    ! - Except for the level scenes, which must be "level_<nb>", where <nb> corresponds to the numbers used in the map scene.<br>
-=> scene names defined in 'levels.xml'
+)
+
+(...as mentionned previously,
+a level must have an associated level scene.
+but several (or all) levels can also share a single scene.
+
+=> content can vary on current level, or could be exactly the same...
+)
 
 
-## Level Manager
-TODO: something to say?
-...
+In order to be functional, a level scene must contain a game manager game oobject(TODO: LINK GAME MANAGER?), with a specific state controller script handling the level's specific actions: the **Level Controller**(TODO: LINK LEVEL CONTROLLER).
 
 
 ### Level Controller
 
-TODO: ... add more infos...
+TODO:...
 
-
-(((
 The "End Level" and "Quit Level" operations must be handled in the level state directly,
-though the level's end can be handled in different ways:
-- end without differentiating success or failure
-- end with success or failure
-Additionally, when failing a level, it can be handled in different ways:
-- failing
-- failing with lives left
-- failing with no lives left
-the last case can be handled even further depending if still have continues or not.
-)))
+generally differentiate success and failure.
 
 
 
-Game specific *actions*, directly related to levels:
+
+Game specific actions, directly related to levels:
 
 * `EndLevelSuccess`:\
 	Should be done in a "level" state.\
@@ -797,25 +818,23 @@ Game specific *actions*, directly related to levels:
 	```
 	where `<GAME_STATE>` is the name of the game state to switch to, typically a "map" state.
 
-(TODO: not here
-* `QuitGame`: Leave the game graph and switch to the global graph.
-	```csharp
-    public void QuitGame() {
-        Leave("<GLOBAL_SCENE>");
-    }
-	```
-	where `<GLOBAL_SCENE>` is the name of the global state's scene to load.
-)
-
-A more complex and generic state controller can be implemented if want to handle all the level specific *actions* in the same method.\
-(TODO: LINK LEVELS - Level Controller)
-...
+this allows basic level actions handling.
 
 
+as seen previously, other game actions can be handled in other states, but can also be handled in the "*level*" state.
+A more complex and generic state controller can be implemented if want to handle all the game specific actions in the same method.
+for example, the level's end can be handled in different ways:
+- end without differentiating success or failure
+- end with success or failure
+Additionally, when failing a level, it can be handled in different ways:
+- failing
+- failing with lives left
+- failing with no lives left
+the last case can be handled even further depending if still have continues or not.
 
+(((
 TODO: here?
 Ready level script that can serve as base.
-+ associated `GameManager` prefab
 
 Must set fields according to graph:
 (pretty crappy, and could be automated by the graphview tool - maybe later...)
@@ -855,14 +874,21 @@ Default empty values, meaning the transition is ignored.
 - `Leave` (exit graph and go to 'leave graph' state):
 	! - TODO: CHANGE! Must handle multiple 'leave graph' states!
 	- QUIT_GAME_TRANSITION_STATE
+)))
 
 
 ## Map
 
 ...
+optional but common state
 
+presents all the levels (from level tree)
+can be a simple list of levels, but can also be more complex like an interactive map or even a fully playable overworld.
 
+generate map using methods from the game data manager
+for example, can determine available levels depending on the current level and the already completed levels using `GetAvailableLevels`.
 
+A "*map*" state should have its own state controller, and at least handle the `StartLevel` and `QuitGame` actions.
 
 
 # Samples
@@ -993,6 +1019,14 @@ TODO: do as for global graph
 (TODO: detail scripts)
 
 
+(TODO: mention? where?
+automatic transitions:
+A "Timer" (script) can be added (global or not depending on graph) if want the state to be left after a period of time
+)
+
+
+TODO: WHERE?
+> **NOTE:** For scene names parameters, the custom property `SceneProperty` can be added to the script, and the scene name obtained from its `name` attribute.
 
 
 

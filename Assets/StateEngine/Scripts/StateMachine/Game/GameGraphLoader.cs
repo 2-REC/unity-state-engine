@@ -42,6 +42,7 @@ public class GameGraphLoader : IGraphLoader {
     protected override State CreateState(StateData data) {
         GameState state = new GameState(data.id, data.scene, data.next);
         state.SetRestartable(data.restartable);
+        state.SetLeavable(data.leavable);
         state.SetIsLevel(((GameStateData)data).isLevel);
         return state;
     }
@@ -57,10 +58,13 @@ public class GameGraphLoader : IGraphLoader {
             }
         }
 
+        // TODO: ALLOW SEVERAL LEVEL - BUT SHOULD CHECK AT END THAT HAVE A LEAST 1 LEVEL!
         if (isLevel) {
+            /*
             if (haveLevel) {
                 throw new Exception("Invalid state: Can't have more than 1 state with 'isLevel' set to 'true'!");
             }
+            */
             haveLevel = true;
         }
 
@@ -76,12 +80,10 @@ public class GameGraphLoader : IGraphLoader {
     }
 
 
-    public static Dictionary<int, LevelNode> LoadLevelGraph(string filename) {
+    public static Dictionary<int, LevelNode> LoadLevelGraph(TextAsset xmlGameLevels) {
         Dictionary<int, LevelNode> nodes = new Dictionary<int, LevelNode>();
-
-        TextAsset xmlFile = (TextAsset)Resources.Load(filename, typeof(TextAsset));
         XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml(xmlFile.text);
+        xmlDoc.LoadXml(xmlGameLevels.text);
         XmlNodeList levels = xmlDoc.GetElementsByTagName("level");
 
         foreach (XmlNode level in levels) {

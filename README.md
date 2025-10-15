@@ -67,6 +67,10 @@ A game project typically contains 2 graphs:
 * **Global Graph**(TODO: LINK "Graphs -> Global Graph"): Starting point of the application, allowing to start play sessions.
 * **Game Graph**(TODO: LINK "Graphs -> Game Graph"): The game itself, handling a play session.
 
+The main difference between the 2 graph types is that a game graph generally contains a state handling game levels.
+
+Tehnically, a game can have more than 2 graphs (e.g. several global and/or game graphs), though there is no obvious use for it.
+
 > **NOTE:** It is possible to have only a game graph.
 This however requires a specific initialization, which would normally be made by the global graph (TODO: LINK to section with 'initGame')
 
@@ -132,7 +136,7 @@ Additionally, other common global actions include:
 * `QuitLevel`: Leave the current level.
 * `SaveGame`: Save the game in its current state.
 
-The `EndLevel` and `QuitLevel` actions must be handled in the "*level*" state directly.\
+The `EndLevel` and `QuitLevel` actions can only be handled in the "*level*" state directly.\
 All the other actions can be handled independently in any state.
 
 Actions are described in more details in ...(TODO: LINK STATE CONTROLLER).
@@ -168,7 +172,7 @@ Here is an example of a game state definition:
 
 ### Level State
 
-A game graph should contain a "*level*" state, where the actual gameplay takes place.
+A game graph must contain a "*level*" state, where the actual gameplay takes place.
 
 The "*level*" state will generally be shared between all game levels, thus a single scene cannot be associated to it, as opposed to the other states.
 
@@ -180,8 +184,8 @@ When the graph manager finds a state with this attribute set, it ignores the sta
 
 Scenes associated to the levels are defined in the "level tree"(TODO: LINK LEVEL TREE).
 
-A game graph can have more than one level state in specific cases, but in general one is enough.
-(TODO: show different graph examples with several level states...? - LINK TO ANNEXES?)
+In general, a game graph will only have one "*level*" state, but more than one are allowed if different state flows are desired for some levels.
+Examples of game graphs with multiple "*level*" states are presented in the annexes(?)(TODO: LINK TO ANNEXES?).
 
 
 ## Transitions
@@ -358,7 +362,7 @@ To summarize:
 
 To manage the game data fields from within the engine, a game data manager script must be created.
 
-The script should be an implementation of the `IGameDataManager` abstract class (defined in the script with the same name), overriding its abstract methods to call methods from the associated session manager.
+The script should be an implementation of the `IGameDataManager` abstract class (defined in the script with the same name), overriding its abstract methods to call methods from the associated session manager.\
 The methods to override are:
 * `LoadSpecifics`
 * `CommitChangesSpecifics`
@@ -424,27 +428,36 @@ Then, for each global data field:
 # Graph Managers
 
 The main components of the state engine are the **graph managers**.
-They manage the states and the transitions between them, as well as the data.
+They manage the states and the transitions between them, as well as the data.\
+A graph manager game object must to be present in each of its state scenes(TODO: LINK SCENES).
 
-A graph manager game object needs to be present in every state scene(TODO: LINK SCENES):
-* global state scenes must contain a global graph manager(TODO: LINK GLOBAL MANAGER),
-* game state scenes must contain a game graph manager(TODO: LINK GAME MANAGER).
-
-A graph manager game object is composed of:
-* A `GlobalManager|GameManager` script component, with the following properties:
-	* A `GlobalStateManager|GameStateManager` prefab.\
-		This game object will be shared between all the states of a graph as a unique instance.
-	* A `GlobalDataManager|GameDataManager` prefab.
-	* A `GlobalStateGraph|GameStateGraph` text asset.
+A global graph manager game object is composed of:
+* A `GlobalManager` script component, with the following properties:
+	* A `GlobalStateManager` prefab.\
+		This game object will be shared between all the states of the graph as a unique instance.
+	* A `GlobalDataManager` prefab.
+	* A `GlobalStateGraph` text asset.
 	* A `GameData` text asset.\
 		The XML file containing the game specific data fields definitions has to be attached to both global and game graph managers through their `Game Data` property. The same file must be set for both managers.
-* A `GlobalStateControler|GameStateController` script component.\
-	This component is specific to each state.\
-	The default scripts are enough for basic states and common actions, however, if additional operations or actions are needed for a state, the script can be replaced by a new script overriding the class in the instantiated prefab in that specific state's scene.
+* A `GlobalStateControler` script component.\
+	This component is specific to each state, and can be replaced if desired in any state.[*]
 
-Optionally, a game graph manager can contain and manage a global data manager, if access to the global data is needed.
+A game graph manager game object is composed of:
+* A `GameManager` script component, with the following properties:
+	* A `GameStateManager` prefab.\
+		This game object will be shared between all the states of the graph as a unique instance.
+	* A `GameDataManager` prefab.
+	* An optional `GlobalDataManager` prefab, if access to the global data is needed.
+	* A `GameStateGraph` text asset.
+	* A `GameData` text asset.\
+		The XML file containing the game specific data fields definitions has to be attached to both global and game graph managers through their `Game Data` property. The same file must be set for both managers.
+	* A `GameLevels` text asset.
+* A `GameStateController` script component.\
+	This component is specific to each state, and can be replaced if desired in any state.[*]
 
-Graph managers should be saved as prefabs, and reused in every state scene of their associated graph. The same prefab has to be used in every graph scene, with only the `GlobalStateControler|GameStateController` component eventually replaced by an overridden script in specific scenes.
+[*]: The default state controller scripts (`GlobalStateControler` or `GameStateController`) are enough for basic states and common actions. However, if additional operations or actions are needed for a state, the script can be replaced by a new script overriding the class in the instantiated prefab in that specific state's scene.
+
+Once set up, graph managers should be saved as prefabs, and reused in every state scene of their associated graph. The same prefab has to be used in every graph scene, with only the state controller component eventually replaced by an overridden script in specific scenes.
 
 Pre-built prefabs are provided for the graph managers to facilitate the setup, only requiring their properties to be set.
 However, if desired, new ones can easily be built from scratch (or could be part of other game objects, though this is not recommended).
@@ -452,7 +465,7 @@ However, if desired, new ones can easily be built from scratch (or could be part
 Alternatively, ready to use prefabs are also provided in the samples(TODO: LINK SAMPLES - eg: GlobalManagerStarter).
 
 
-## Global Manager
+## Global Manager Prefab
 
 A number of steps are required to build a global graph manager.
 
@@ -481,7 +494,7 @@ Once the prerequisite components are available, the game object can be created:
 [*]: The `GlobalStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
 
 
-## Game Manager
+## Game Manager Prefab
 
 As for the global graph manager, a number of steps are required to build a game graph manager.
 
@@ -508,6 +521,7 @@ Once the prerequisite components are available, the game object can be created:
 		* Optionally check the `Use Global Data Manager` checkbox and set the `GlobalDataManager` prefab for the `Global Data Manager` property.
 		* Set the `game_states` XML file for the `Game States Graph` property.
 		* Set the `values` XML file for the `Game Data` property.
+		* Set the `levels` XML file for the `Game Levels` property.
 	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
 
 	![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
@@ -517,23 +531,20 @@ Once the prerequisite components are available, the game object can be created:
 
 # Scenes
 
-Every state requires an associated scene, which must satisfy the following requirements:
+Every state requires an associated scene.
+A scene can however be shared between several states.
+
+Scenes must satisfy the following requirements:
 * The scene name must be the same as the one defined in the corresponding state graph (`scene` attribute of a `<state>`).
 * The scene must contain a graph management object:
 	* `GlobalManager` prefab for global states.
 	* `GameManager` prefab for game states.
-* The scene must be added in the project's scene list (in build profiles).
+* The scene must be added to the project's scene list (in build profiles).
 
 **NOTE:** The starting scene (first one in the project's build settings) should be the one associated to the state defined as entry point in the global state graph.
 
 Additionally, depending on the state's attributes and transitions, certain actions(TODO: LINK STATE CONTROLLER) are expected to be executed in certain conditions.
-
-The scene creation process is as follows:
-* Create a new scene and add it the project's scenes list.[*]
-* Instantiate either a global or game graph management prefab(TODO: LINK GRAPH MANAGERS), depending on which graph the state belongs to.
-* If needed, override and replace the state controller(TODO: LINK STATE CONTROLLER) script in the graph manager for the specific state.
-
-[*]: A scene can be shared between several states.
+This is managed by overriding and replacing the state controller(TODO: LINK STATE CONTROLLER) script component in the graph manager for the specific state.
 
 
 ## State Controller
@@ -648,6 +659,7 @@ allow to not have global graph
 
 by calling NewGame or LoadGame
 
+NOT RELATED (!?)
 (TODO: check if put details here or leave in file...)
         "InitGame" script in "Tests/Game" (see script for use details).
 )
@@ -691,6 +703,15 @@ Some actions however must be handled by a "*level*" state (TODO: LINK LEVEL), wh
 - Check Continue: After "Check Game Over".
     bool GetGameData().CanContinue()
 
+!!!! TODO: mention where????
+=> the 3 previous functions (IsGameComplete, IsGameOver, CanContinue) implement basic/common behavior:
+- IsGameComplete: check if all levels have been completed.
+- IsGameOver: check still have lives
+- CanContinue: check still have continues
+generally it is what we want and expect, however it can be changed if deisred (the game could be completed or over following a specific event...)
+can be overridden (in game data manager) if want game specific behavior.
+
+
 - Use Continue
     int GetGameData().LoseContinue()
         + do it here (+call CanContinue):
@@ -730,6 +751,8 @@ TODO: explain level tree stuff (xml, level files, etc.)
 - 'levels.xml'
 	each level has an associated scene
 	but a same scene can be shared by several levels.
+	=> `Game Levels` in game manager prefab
+
 
 - scene file
 
@@ -741,6 +764,24 @@ TODO: explain level tree stuff (xml, level files, etc.)
 
 - ...?
 
+
+### Map State
+
+...
+optional but common state
+
+presents all the levels (from level tree)
+can be a simple list of levels, but can also be more complex like an interactive map or even a fully playable overworld.
+
+generate map using methods from the game data manager
+for example, can determine available levels depending on the current level and the already completed levels using `GetAvailableLevels`.
+
+A "*map*" state should have its own state controller, and at least handle the `StartLevel` and `QuitGame` actions.
+
+
+TODO:
+IF NO MAP STATE (eg directly LEVEL state),
+must handle SetLevel + GetNextLevels or GetAvailableLevels...
 
 
 ## Level Scenes
@@ -763,20 +804,20 @@ but several (or all) levels can also share a single scene.
 In order to be functional, a level scene must contain a game manager game oobject(TODO: LINK GAME MANAGER?), with a specific state controller script handling the level's specific actions: the **Level Controller**(TODO: LINK LEVEL CONTROLLER).
 
 
-### Level Controller
+## Level Controller
 
 TODO:...
 
-The "End Level" and "Quit Level" operations must be handled in the level state directly,
+The `EndLevel` and `QuitLevel` actions must be handled in the "*level*" state directly,
 generally differentiate success and failure.
 
 
 
 
-Game specific actions, directly related to levels:
+Implementation examples of game specific actions directly related to levels:
 
 * `EndLevelSuccess`:\
-	Should be done in a "level" state.\
+	Should be done in a "*level*" state.\
 	Steps:
 	* Update the current level's status to commpleted.
 	* Save changes to game data.
@@ -793,7 +834,7 @@ Game specific actions, directly related to levels:
 	}
 	```
 * `EndLevelFail`:\
-	Should be done in a "level" state.\
+	Should be done in a "*level*" state.\
 	Steps:
 	* Update the game data b yremoving a player's life.
 	* Save changes to game data.
@@ -810,7 +851,7 @@ Game specific actions, directly related to levels:
 	}
 	```
 * `QuitLevel`: Exit the current level.\
-	Should be done in a "level" state.\
+	Should be done in a "*level*" state.\
 	```csharp
     public void QuitLevel() {
 		LoadChildState("<GAME_STATE>");
@@ -875,20 +916,6 @@ Default empty values, meaning the transition is ignored.
 	! - TODO: CHANGE! Must handle multiple 'leave graph' states!
 	- QUIT_GAME_TRANSITION_STATE
 )))
-
-
-## Map
-
-...
-optional but common state
-
-presents all the levels (from level tree)
-can be a simple list of levels, but can also be more complex like an interactive map or even a fully playable overworld.
-
-generate map using methods from the game data manager
-for example, can determine available levels depending on the current level and the already completed levels using `GetAvailableLevels`.
-
-A "*map*" state should have its own state controller, and at least handle the `StartLevel` and `QuitGame` actions.
 
 
 # Samples

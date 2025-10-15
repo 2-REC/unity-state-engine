@@ -10,6 +10,7 @@ public sealed class GameManagerEditor : Editor {
     SerializedProperty globalDataManagerProp;
     SerializedProperty gameStatesGraphProp;
     SerializedProperty gameDataProp;
+    SerializedProperty gameLevelsProp;
 
 
     private void OnEnable() {
@@ -19,6 +20,7 @@ public sealed class GameManagerEditor : Editor {
         globalDataManagerProp = serializedObject.FindProperty("globalDataManager");
         gameStatesGraphProp = serializedObject.FindProperty("gameStatesGraph");
         gameDataProp = serializedObject.FindProperty("gameData");
+        gameLevelsProp = serializedObject.FindProperty("gameLevels");
     }
 
     public override void OnInspectorGUI() {
@@ -35,6 +37,7 @@ public sealed class GameManagerEditor : Editor {
 
         EditorGUILayout.PropertyField(gameStatesGraphProp, new GUIContent("Game States Graph"));
         EditorGUILayout.PropertyField(gameDataProp, new GUIContent("Game Data"));
+        EditorGUILayout.PropertyField(gameLevelsProp, new GUIContent("Game Levels"));
 
         serializedObject.ApplyModifiedProperties();
     }

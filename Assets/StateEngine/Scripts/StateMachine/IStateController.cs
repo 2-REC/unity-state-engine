@@ -66,7 +66,8 @@ public abstract class IStateController : MonoBehaviour {
         }
     }
 
-    protected void Leave(string exitScene) {
+    //protected void Leave(string exitScene) {
+    protected void Leave(string exitScene="") {
         State state = stateManager.GetState(StateId);
         if (!state.Leavable) {
             throw new Exception("IStateController: 'Leave' cannot be called if the state cannot leave the graph!");

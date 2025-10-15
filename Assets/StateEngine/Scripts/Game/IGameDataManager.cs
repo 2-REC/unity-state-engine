@@ -4,9 +4,7 @@ using System.Collections.Generic;
 public abstract class IGameDataManager : IDataManager {
 
     public static TextAsset xmlGameData;
-
-    //TODO: move somewhere else?
-    private const string GRAPH_LEVELS = "Xml/levels";
+    public static TextAsset xmlGameLevels;
 
 //?    protected GameSessionManager gameSessionManager = GameSessionManager.Instance;
     protected GameSessionManager gameSessionManager;
@@ -37,8 +35,7 @@ public abstract class IGameDataManager : IDataManager {
         Debug.Log("GameDataManager:Load - lives: " + lives);
         Debug.Log("GameDataManager:Load - continues: " + continues);
 
-        levels = GameGraphLoader.LoadLevelGraph(GRAPH_LEVELS);
-
+        levels = GameGraphLoader.LoadLevelGraph(xmlGameLevels);
         foreach (KeyValuePair<int, LevelNode> level in levels) {
             if (gameSessionManager.IsLevelCompleted(level.Key)) {
                 level.Value.completed = true;
@@ -190,17 +187,31 @@ Debug.Log("levels:");
         return null;
     }
 
+    public List<int> GetNextLevels(int level) {
+        // TODO: or error?
+        if (level == -1 || level >= levels.Count)
+            return new List<int>();
+
+        return levels[level].Next;
+    }
+
     public Dictionary<int, bool> GetAvailableLevels() {
         return availableLevels;
     }
 
+    // TODO: the 3 following methods should be overridden in specific cases
+    // => add to doc...
     public bool IsGameOver() {
         return (lives <= 0);
     }
 
-    //TODO: CHECK THIS! why?
     public bool IsGameComplete() {
-        return (continues <= 0);
+        foreach (KeyValuePair<int, LevelNode> level in levels) {
+            if (!level.Value.completed) {
+                 return false;
+            }
+        }
+        return true;
     }
 
     public bool CanContinue() {

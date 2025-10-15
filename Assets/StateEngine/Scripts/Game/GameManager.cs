@@ -14,6 +14,7 @@ public class GameManager : IManager {
     //////// GLOBAL_IN_GAME - END
     public TextAsset gameStatesGraph;
     public TextAsset gameData;
+    public TextAsset gameLevels;
 
 
     //////// GLOBAL_IN_GAME - BEGIN
@@ -43,6 +44,7 @@ public class GameManager : IManager {
 
     protected override IDataManager InstantiateDataManager() {
         IGameDataManager.xmlGameData = gameData;
+        IGameDataManager.xmlGameLevels = gameLevels;
         return Instantiate(gameDataManager);
     }
 

@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// TODO: want this? (might not be a good idea)
+//[DefaultExecutionOrder(-5)]
 public abstract class IStateController : MonoBehaviour {
 
     public int StateId { get; private set; }

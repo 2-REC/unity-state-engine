@@ -44,7 +44,7 @@ The first step consists in creating a Unity project ready to use the engine:
 	* Add `GlobalManager` before `Default Time`
 	* Add `GameManager` before `Default Time` (just after `GlobalManager`)
 
-	![Project Settings - Script Execution Order](./docs/images/script_order.jpg "Script Execution Order")
+	![Project Settings - Script Execution Order](./images/script_order.jpg "Script Execution Order")
 
 
 # State Graphs
@@ -488,7 +488,7 @@ Once the prerequisite components are available, the game object can be created:
 		* Set the `values` XML file for the `Game Data` property.
 	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
 
-	![Global Manager](./docs/images/globalmanager.jpg "Global Manager")
+	![Global Manager](./images/globalmanager.jpg "Global Manager")
 
 [*]: The `GlobalStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
 
@@ -502,6 +502,10 @@ As for the global graph manager, a number of steps are required to build a game 
 * A game state graph XML file (e.g.: `game_states.xml`).
 * Optionally a global data manager script implementing `IGlobalDataManager` (e.g.: `GlobalDataManager.cs`).
 * A game data XML file (e.g.: `values.xml`).
+* A game levels XML file (e.g.: `levels.xml`).[*]
+
+[*]: The **level tree** is generally not yet defined at this point, so an empty file can be used (and edited later).
+It is easier to set an empty file now and edit it later, than to add a file to the prefab later (as the prefab will already have been instantiated in some scenes and it could cause unexpected results).
 
 Once the prerequisite components are available, the game object can be created:
 1. Create a **game data manager** prefab.
@@ -523,7 +527,7 @@ Once the prerequisite components are available, the game object can be created:
 		* Set the `levels` XML file for the `Game Levels` property.
 	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
 
-	![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
+	![Game Manager](./images/gamemanager.jpg "Game Manager")
 
 [*]: The `GameStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
 
@@ -565,7 +569,7 @@ More actions can be defined for a state by overriding the state controller scrip
 
 > **NOTE:** The `StateController` script component should be overridden in the graph manager prefab **instance** in the scene, not in the prefab itself (unless changes should be available for every state in the graph).
 
-!["State Controller component of Graph Manager"](./docs/images/gamemanager-statecontroller.jpg "State Controller component of Graph Manager")
+!["State Controller component of Graph Manager"](./images/gamemanager-statecontroller.jpg "State Controller component of Graph Manager")
 
 Additionally, specific state initializations can be done by overriding the `HandleMainState` method.
 
@@ -899,6 +903,7 @@ Implementation examples of game specific actions directly related to levels:
 this allows basic level actions handling.
 
 
+...
 as seen previously, other game actions can be handled in other states, but can also be handled in the "*level*" state.
 A more complex and generic state controller can be implemented if want to handle all the game specific actions in the same method.
 for example, the level's end can be handled in different ways:
@@ -914,6 +919,9 @@ the last case can be handled even further depending if still have continues or n
 TODO: here?
 => move to samples (provide the project in samples)
 Ready level script that can serve as base.
+
+look at:
+C:\Users\ADMIN\Downloads\UNITY-STATE-ENGINE\Level.cs
 
 Must set fields according to graph:
 (pretty crappy, and could be automated by the graphview tool - maybe later...)
@@ -956,6 +964,9 @@ Default empty values, meaning the transition is ignored.
 )))
 
 
+
+
+TODO: REMOVE FROM THIS DOC!?
 # Samples
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -997,7 +1008,7 @@ Ready to use graphs and managers...
 ### State Graph
 
 The default graph for global states can be represented the following way:
-!["Default Global Graph"](./docs/images/global_graph.png "Default Global Graph")
+!["Default Global Graph"](./images/global_graph.png "Default Global Graph")
 (TODO: redo image + add border or transparent bkg)
 
 where:

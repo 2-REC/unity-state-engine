@@ -88,6 +88,8 @@ GAME_OVER
 CONTINUE
 QUIT_GAME
 
+(no map state, directly in level state)
+
 
 # Data
 
@@ -127,40 +129,36 @@ script + prefabs (global + game)
 
 # Graph Managers
 
-build prefabs...
-
-- create graph managers
-	prefabs
-		eg in 'Prefabs' folder
-		GlobalManager
-		GameManager
+...
+Build the 2 graph managers prefabs.
+Save the new prefabs in a new `Prefabs` folder for example.
 
 
 ## Global Manager
 
-...(simplify, remove redundant/useless) + see what can remove from other doc...
+Create the Global Manager prefab:
+
 1. Create a **global data manager** prefab.
 	* Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
-	* Save the prefab. Name it `GlobalDataManager` for example.
+	* Save the prefab . Name it `GlobalDataManager` for example.
 	* Delete the instantiated prefab in the *Hierarchy* panel.
 2. Create the **global graph manager** prefab:
 	* Instantiate the provided `GlobalManager` prefab.\
-		The prefab should already have a `GlobalStateManager` prefab set for its `Global State Manager` porperty, as well as a `GlobalStateController` script component attached to it.[*]
+		The prefab should already have a `GlobalStateManager` prefab set for its `Global State Manager` porperty, as well as a `GlobalStateController` script component attached to it.\
+		The `GlobalStateController` component in instantiated prefabs will be replaced by an overridden script for global states requiring specific actions or behavior.
 	* Set the `GlobalManager` prefab properties:
 		* Set the `GlobalDataManager` prefab for the `Global Data Manager` property (the prefab itself, **NOT** an instance).
 		* Set the `global_states` XML file for the `Global States Graph` property.
 		* Set the `values` XML file for the `Game Data` property.
-	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
+	* Save the prefab (as a variant), and delete it in the *Hierarchy* panel.
 
 	![Global Manager](./docs/images/globalmanager.jpg "Global Manager")
-
-..."**WILL** be replaced in some states"
-[*]: The `GlobalStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
 
 
 ## Game Manager
 
-...(simplify, remove redundant/useless) + see what can remove from other doc...
+Create the Game Manager prefab:
+
 1. Create a **game data manager** prefab.
 	* Either create an empty object and add a `GameDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
 	* Save the prefab. Name it `GameDataManager` for example.
@@ -171,20 +169,20 @@ build prefabs...
 	* Delete the instantiated prefab in the *Hierarchy* panel.
 3. Create the **game graph manager** prefab:
 	* Instantiate the provided `GameManager` prefab.\
-		The prefab should already have a `GameStateManager` prefab set for its `Game State Manager` porperty, as well as a `GameStateController` script component attached to it.[*]
+		The prefab should already have a `GameStateManager` prefab set for its `Game State Manager` porperty, as well as a `GameStateController` script component attached to it.\
+		The `GameStateController` component in instantiated prefabs will be replaced by an overridden script for game states requiring specific actions or behavior.
 	* Set the `GameManager` prefab properties:
 		* Set the `GameDataManager` prefab for the `Game Data Manager` property (the prefab itself, **NOT** an instance).
 		* Optionally check the `Use Global Data Manager` checkbox and set the `GlobalDataManager` prefab for the `Global Data Manager` property.
 		* Set the `game_states` XML file for the `Game States Graph` property.
 		* Set the `values` XML file for the `Game Data` property.
-		* Set the `levels` XML file for the `Game Levels` property.
-OK WITH EMPTY LEVELS TO START
-	* Save the prefab (as a variant, or replacing the original), and delete it in the *Hierarchy* panel.
+		* Set the `levels` XML file for the `Game Levels` property.[*]
+	* Save the prefab (as a variant), and delete it in the *Hierarchy* panel.
 
 	![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
 
-..."**WILL** be replaced in some states"
-[*]: The `GameStateController` component is specific to each state, and can be replaced by an overridden script in the instantiated prefab of any state if desired (TODO: see below - link?).
+[*]: The **level tree** is not yet defined at this point, so an empty file can be used (it will be edited later when [creating the levels](TODO: LINK LEVELS)).
+**TODO:** check if OK to have no level defined at runtime?
 
 
 # States

@@ -1,16 +1,14 @@
 using System.Collections.Generic;
 
-public class LevelNode : object {
+public class LevelNode {
 
     public int Id { get; private set; }
     public string Scene { get; private set; }
     public string Name { get; private set; }
+    public bool Startup { get; private set; }
     public List<int> Next { get; private set; }
 
-    public string BeginAnim { get; private set; }
-    public string EndAnim { get; private set; }
-    public string EndAnimFail { get; private set; }
-    public bool Startup { get; private set; }
+    public Dictionary<string, string> Data { get; private set; } = new();
 
     public bool Completed { get; set; }
 
@@ -25,13 +23,10 @@ public class LevelNode : object {
         Completed = false;
     }
 
-    public LevelNode(int id, string scene, string name, string beginAnim, string endAnim, string endAnimFail, bool startup) {
+    public LevelNode(int id, string scene, string name, bool startup) {
         Id = id;
         Scene = scene;
         Name = name;
-        BeginAnim = beginAnim;
-        EndAnim = endAnim;
-        EndAnimFail = endAnimFail;
         Startup = startup;
 
         Next = null;
@@ -39,10 +34,12 @@ public class LevelNode : object {
     }
 
     public void AddNext(int nextId) {
-        if (Next == null) {
-            Next = new List<int>();
-        }
+        Next ??= new List<int>();
         Next.Add(nextId);
+    }
+
+    public void SetData(Dictionary<string, string> data) {
+        Data = data;
     }
 
 }

@@ -1,11 +1,10 @@
 using UnityEngine;
 using System.Xml;
-using System;
 using System.Collections.Generic;
 
 public class GameGraphLoader : IGraphLoader {
 
-    private bool haveLevel;
+    public bool HaveLevelState { get; private set; }
 
 
     protected class GameStateData : StateData {
@@ -18,15 +17,9 @@ public class GameGraphLoader : IGraphLoader {
     }
 
 
-/*
-    public GameGraphLoader(string filename)
-            : base(filename) {
-        haveLevel = false;
-    }
-*/
     public GameGraphLoader(TextAsset xmlGraph)
             : base(xmlGraph) {
-        haveLevel = false;
+        HaveLevelState = false;
     }
 
     protected override StateData CreateStateData() {
@@ -50,29 +43,18 @@ public class GameGraphLoader : IGraphLoader {
     protected override void GetAttributes(StateData data, XmlAttributeCollection attributes) {
         base.GetAttributes(data, attributes);
 
-        bool isLevel = false;
+        XmlAttribute isLevelAttribute = attributes["isLevel"];
+        bool isLevel = (isLevelAttribute != null) && ToBool(isLevelAttribute.Value, false);
 
-        foreach (XmlAttribute attribute in attributes) {
-            if (attribute.Name.Equals("isLevel")) {
-                isLevel = ToBool(attribute.Value, false);
-            }
-        }
-
-        // TODO: ALLOW SEVERAL LEVEL - BUT SHOULD CHECK AT END THAT HAVE A LEAST 1 LEVEL!
-        if (isLevel) {
-            /*
-            if (haveLevel) {
-                throw new Exception("Invalid state: Can't have more than 1 state with 'isLevel' set to 'true'!");
-            }
-            */
-            haveLevel = true;
-        }
+        if (isLevel)
+            HaveLevelState = true;
 
         ((GameStateData)data).isLevel = isLevel;
     }
 
     protected override bool CheckAttributes(StateData data) {
         if (!((GameStateData)data).isLevel && ((data.scene == null) || "".Equals(data.scene))) {
+            // TODO: Exception
             Debug.Log("Invalid state!");
             return false;
         }
@@ -81,66 +63,68 @@ public class GameGraphLoader : IGraphLoader {
 
 
     public static Dictionary<int, LevelNode> LoadLevelGraph(TextAsset xmlGameLevels) {
-        Dictionary<int, LevelNode> nodes = new Dictionary<int, LevelNode>();
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml(xmlGameLevels.text);
-        XmlNodeList levels = xmlDoc.GetElementsByTagName("level");
+        Dictionary<int, LevelNode> nodes = new();
 
-        foreach (XmlNode level in levels) {
+        XmlDocument xmlDoc = new();
+        xmlDoc.LoadXml(xmlGameLevels.text);
+
+        XmlNodeList levelsNodes = xmlDoc.GetElementsByTagName("levels");
+        if (levelsNodes.Count != 1)
+            // TODO: XmlException?
+            throw new XmlException("Invalid XML: A single 'levels' node is required!");
+
+        XmlNodeList levelNodes = levelsNodes[0].ChildNodes;
+        foreach (XmlNode levelNode in levelNodes) {
             int id = -1;
             string scene = null;
             string name = null;
-            string beginAnim = null;
-            string endAnim = null;
-            string endAnimFail = null;
             bool startup = false;
 
-            foreach (XmlAttribute attribute in level.Attributes) {
-                if (attribute.Name.Equals("id")) {
-                    id = int.Parse(attribute.Value);
-                } else if (attribute.Name.Equals("scene")) {
-                    scene = attribute.Value;
-                } else if (attribute.Name.Equals("name")) {
-                    name = attribute.Value;
-                } else if (attribute.Name.Equals("beginAnim")) {
-                    beginAnim = attribute.Value;
-                } else if (attribute.Name.Equals("endAnim")) {
-                    endAnim = attribute.Value;
-                } else if (attribute.Name.Equals("endAnimFail")) {
-                    endAnimFail = attribute.Value;
-                } else if (attribute.Name.Equals("startup")) {
-                    startup = Boolean.Parse(attribute.Value);
+            // TODO: Add 'data' for level data (xml file)
+            foreach (XmlAttribute attribute in levelNode.Attributes) {
+                switch (attribute.Name) {
+                    case "id":
+                        id = int.Parse(attribute.Value);
+                        break;
+                    case "scene":
+                        scene = attribute.Value;
+                        break;
+                    case "name":
+                        name = attribute.Value;
+                        break;
+                    case "startup":
+                        startup = bool.Parse(attribute.Value);
+                        break;
                 }
             }
 
-            if ((id == -1) || (scene == null) || "".Equals(scene)) {
-                Debug.Log("Invalid level node!");
-                continue;
+            if ((id == -1) || string.IsNullOrEmpty(scene)) {
+                // TODO: Exception (+separate cases)
+                throw new XmlException("Invalid XML: Missing attributes for 'node'!");
             }
 
-            if (name == null) {
-                name = id.ToString();
+            name ??= id.ToString();
+
+            LevelNode node = new(id, scene, name, startup);
+
+            XmlNode dataNode = levelNode.SelectSingleNode("data");
+            if (dataNode != null) {
+                Dictionary<string, string> data = new();
+                foreach(XmlAttribute attribute in dataNode.Attributes) {
+                    data[attribute.Name] = attribute.Value;
+                }
+                node.SetData(data);
             }
 
-            LevelNode node = new LevelNode(id, scene, name, beginAnim, endAnim, endAnimFail, startup);
-
-
-            foreach (XmlNode childList in level.ChildNodes) {
-                if (childList.Name == "next") {
-                    foreach (XmlNode child in childList.ChildNodes) {
-                        foreach (XmlAttribute attribute in child.Attributes) {
-                            if (attribute.Name.Equals("id")) {
-                                int value = int.Parse(attribute.Value);
-                                if (value != -1) {
-                                    node.AddNext(value);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    break;
+            XmlNode nextLevelsNode = levelNode.SelectSingleNode("nextLevels");
+            if (nextLevelsNode != null) {
+                foreach (XmlNode nextNode in nextLevelsNode.ChildNodes) {
+                    XmlAttribute nextId = nextNode.Attributes["id"];
+                    int nextIdValue = int.Parse(nextId.Value);
+                    node.AddNext(nextIdValue);
                 }
             }
+
             nodes.Add(id, node);
         }
         return nodes;

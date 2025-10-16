@@ -72,6 +72,7 @@ public abstract class IGraphLoader : object {
         State[] states = CreateStateArray(stateNodes.Count);
 
         foreach (XmlNode stateNode in stateNodes) {
+            // TODO: merge both methods?
             StateData data = CreateStateData();
             GetAttributes(data, stateNode.Attributes);
 
@@ -80,7 +81,9 @@ public abstract class IGraphLoader : object {
                 return null;
             }
 
-            CheckAttributes(data);
+            // TODO: exception instead (inside method)?
+            if (!CheckAttributes(data))
+                continue;
 
             State state = CreateState(data);
 
@@ -96,8 +99,7 @@ public abstract class IGraphLoader : object {
     }
 
     protected virtual State[] CreateStateArray(int length) {
-        State[] states = new State[length + 1]; //+NONE state
-                                                //Debug.Log("nb states: " + length);
+        State[] states = new State[length + 1]; // + NONE state
         states[StateIds.NONE] = CreateState(new StateData());
         return states;
     }
@@ -111,6 +113,7 @@ public abstract class IGraphLoader : object {
 
     protected virtual void GetAttributes(StateData data, XmlAttributeCollection attributes) {
         foreach (XmlAttribute attribute in attributes) {
+            // TODO: replace with 'switch'
             if (attribute.Name.Equals("id")) {
                 data.id = StateIds.Index(attribute.Value);
             } else if (attribute.Name.Equals("scene")) {

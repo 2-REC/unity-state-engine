@@ -12,7 +12,7 @@ public class LevelNode : object {
     public string EndAnimFail { get; private set; }
     public bool Startup { get; private set; }
 
-    public bool completed;
+    public bool Completed { get; set; }
 
 
     public LevelNode(int id, string scene, string name) {
@@ -22,7 +22,7 @@ public class LevelNode : object {
 
         Startup = false;
         Next = null;
-        completed = false;
+        Completed = false;
     }
 
     public LevelNode(int id, string scene, string name, string beginAnim, string endAnim, string endAnimFail, bool startup) {
@@ -35,7 +35,7 @@ public class LevelNode : object {
         Startup = startup;
 
         Next = null;
-        completed = false;
+        Completed = false;
     }
 
     public void AddNext(int nextId) {

@@ -38,7 +38,7 @@ public abstract class IGameDataManager : IDataManager {
         levels = GameGraphLoader.LoadLevelGraph(xmlGameLevels);
         foreach (KeyValuePair<int, LevelNode> level in levels) {
             if (gameSessionManager.IsLevelCompleted(level.Key)) {
-                level.Value.completed = true;
+                level.Value.Completed = true;
             }
         }
 
@@ -72,7 +72,7 @@ Debug.Log("levels:");
         gameSessionManager.SetLevel(currentLevel);
 
         foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (level.Value.completed) {
+            if (level.Value.Completed) {
                 gameSessionManager.SetLevelCompleted(level.Key);
             }
         }
@@ -83,8 +83,8 @@ Debug.Log("levels:");
     private void SetLevels() {
         foreach (KeyValuePair<int, LevelNode> level in levels) {
             if (level.Value.Startup) {
-                availableLevels.Add(level.Key, level.Value.completed);
-                if (level.Value.completed) {
+                availableLevels.Add(level.Key, level.Value.Completed);
+                if (level.Value.Completed) {
                     UpdateLevels(level.Key);
                 }
             }
@@ -96,8 +96,8 @@ Debug.Log("levels:");
         if (next != null) {
             for (int i = 0; i < next.Count; ++i) {
                 if (!availableLevels.ContainsKey(next[i])) {
-                    availableLevels.Add(next[i], levels[next[i]].completed);
-                    if (levels[next[i]].completed) {
+                    availableLevels.Add(next[i], levels[next[i]].Completed);
+                    if (levels[next[i]].Completed) {
                         UpdateLevels(next[i]);
                     }
                 }
@@ -115,7 +115,7 @@ Debug.Log("levels:");
 
     public void SetLevelCompleted() {
         if (currentLevel != -1) {
-            levels[currentLevel].completed = true;
+            levels[currentLevel].Completed = true;
             availableLevels[currentLevel] = true;
             UpdateLevels(currentLevel);
         }
@@ -199,15 +199,13 @@ Debug.Log("levels:");
         return availableLevels;
     }
 
-    // TODO: the 3 following methods should be overridden in specific cases
-    // => add to doc...
     public bool IsGameOver() {
         return (lives <= 0);
     }
 
     public bool IsGameComplete() {
         foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (!level.Value.completed) {
+            if (!level.Value.Completed) {
                  return false;
             }
         }

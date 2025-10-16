@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <graph>
-    <states>
-        <state id="LOGO" scene="Logo" next="INTRO"/>
-        <state id="INTRO" scene="Intro" next="MENU"/>
-        <state id="MENU" scene="Menu" next="QUIT" leavable="true">
-            <children>
-                <child id="NEW_GAME"/>
-                <child id="LOAD_GAME"/>
-                <child id="OPTIONS"/>
-                <child id="CREDITS"/>
-            </children>
-        </state>
-        <state id="NEW_GAME" scene="NewGame" leavable="true"/>
-        <state id="LOAD_GAME" scene="LoadGame" leavable="true"/>
-        <state id="OPTIONS" scene="Options"/>
-        <state id="CREDITS" scene="Credits"/>
-        <state id="QUIT" scene="Quit" leavable="true"/>
-    </states>
+	<states>
+		<state id="MENU" scene="Menu" next="QUIT">
+			<children>
+				<child id="NEW_GAME"/>
+			</children>
+		</state>
+		<state id="NEW_GAME" scene="NewGame" leavable="true"/>
+		<state id="QUIT" scene="Quit" leavable="true"/>
+	</states>
 </graph>

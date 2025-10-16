@@ -13,6 +13,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4900000, guid: 1ca098e8e1a60ca4aa70a2b2dff90eef, type: 3}
     - target: {fileID: 2711949165766793783, guid: 86d8ea49fd2392e4fa031d51772dabfe, type: 3}
+      propertyPath: gameLevels
+      value: 
+      objectReference: {fileID: 4900000, guid: fe4ecc3b549a7a24fbfcf9d9ccc414d1, type: 3}
+    - target: {fileID: 2711949165766793783, guid: 86d8ea49fd2392e4fa031d51772dabfe, type: 3}
       propertyPath: gameDataManager
       value: 
       objectReference: {fileID: 75781735189121952, guid: d5e05456cbfedea449d8bba15927cd31, type: 3}
@@ -22,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 4900000, guid: 1fc1d39c89c005b4db29ef8fc5115878, type: 3}
     - target: {fileID: 6187339906722918088, guid: 86d8ea49fd2392e4fa031d51772dabfe, type: 3}
       propertyPath: m_Name
-      value: GameManager Variant
+      value: GameManagerStarter
       objectReference: {fileID: 0}
     - target: {fileID: 8522232415287179089, guid: 86d8ea49fd2392e4fa031d51772dabfe, type: 3}
       propertyPath: m_LocalPosition.x

@@ -74,6 +74,7 @@ public class GameGraphLoader : IGraphLoader {
             throw new XmlException("Invalid XML: A single 'levels' node is required!");
 
         XmlNodeList levelNodes = levelsNodes[0].ChildNodes;
+        // TODO: use instead 'SelectNodes("level")'
         foreach (XmlNode levelNode in levelNodes) {
             int id = -1;
             string scene = null;

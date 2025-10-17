@@ -11,7 +11,7 @@ public static class FileManager {
 
             SaveData savedData = new SaveData();
             foreach (KeyValuePair<string, int> item in fields) {
-                Debug.Log("PAIR: " + item.Key + ", " + item.Value);
+                Debug.Log("SAVE PAIR: " + item.Key + ", " + item.Value);
                 SaveDataItem dataItem = new SaveDataItem(item.Key, item.Value);
                 savedData.items.Add(dataItem);
             }
@@ -23,6 +23,7 @@ public static class FileManager {
 
     public static bool Load(string filename, Dictionary<string, int> fields) {
         string path = Path.Combine(Application.persistentDataPath, filename) + ".json";
+        Debug.Log("LOAD PATH: " + path);
         if (File.Exists(path)) {
             string jsonData = File.ReadAllText(path);
             SaveData loadedData = JsonUtility.FromJson<SaveData>(jsonData);
@@ -32,9 +33,8 @@ public static class FileManager {
             }
 
             ////////
-            Debug.Log("Data loaded, dictionary contains: " + fields.Count + " entries");
             foreach (KeyValuePair<string, int> item in fields) {
-                Debug.Log("PAIR: " + item.Key + ", " + item.Value);
+                Debug.Log("LOAD PAIR: " + item.Key + ", " + item.Value);
             }
             ////////
         } else {

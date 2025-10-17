@@ -25,15 +25,15 @@ public abstract class IGameDataManager : IDataManager {
         //TODO: sure it's called before any other method?
         gameSessionManager = GameSessionManager.Instance;
         currentLevel = gameSessionManager.GetLevel();
-        Debug.Log("GameDataManager:Load - level: " + currentLevel);
+        //Debug.Log("GameDataManager:Load - level: " + currentLevel);
 
         lives = gameSessionManager.GetLives();
         continues = gameSessionManager.GetContinues();
 
         LoadSpecifics();
 
-        Debug.Log("GameDataManager:Load - lives: " + lives);
-        Debug.Log("GameDataManager:Load - continues: " + continues);
+        //Debug.Log("GameDataManager:Load - lives: " + lives);
+        //Debug.Log("GameDataManager:Load - continues: " + continues);
 
         levels = GameGraphLoader.LoadLevelGraph(xmlGameLevels);
         foreach (KeyValuePair<int, LevelNode> level in levels) {

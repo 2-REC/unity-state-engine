@@ -27,6 +27,9 @@ public class IStateManager : MonoBehaviour {
     protected IStateManager() {
         isAsync = false;
 
+        // TODO: make sure ok here (needed BEFORE loading new graph)
+        StateIds.Reset();
+
         stack = new Stack<int>();
         stack.Push(StateIds.NONE);
         CurrentStateId = StateIds.NONE;
@@ -61,7 +64,9 @@ public class IStateManager : MonoBehaviour {
     }
 
     public void SetState(int stateId) {
-        if (CurrentStateId != stateId) {
+        // TODO: does this cause issues? (when is this happening?)
+        //if (CurrentStateId != stateId) {
+        if (true) {
             CurrentStateId = stateId;
             stack.Push(stateId);
         }
@@ -130,7 +135,9 @@ public class IStateManager : MonoBehaviour {
     }
 
     private void LoadState(int stateId) {
-        if (CurrentStateId != stateId) {
+        // TODO: does this cause issues? (needed if want same state as 'next' state, eg: LEVEL)
+        //if (CurrentStateId != stateId) {
+        if (true) {
             CurrentStateId = stateId;
             stack.Push(stateId);
         }
@@ -182,7 +189,7 @@ public class IStateManager : MonoBehaviour {
 
         if (!string.IsNullOrEmpty(exitScene)) {
             //TODO: required?
-            //?            instance = null;
+//?            instance = null;
             Destroy(gameObject);
             SceneManager.LoadScene(exitScene);
         } else {

@@ -14,10 +14,14 @@ public abstract class IGlobalDataManager : IDataManager {
 
     public static TextAsset xmlGameData;
 
+    protected GlobalSessionManager globalSessionManager;
+
     // Get global data
     protected override void LoadData() {
         //TODO: OK HERE?
-        GlobalSessionManager.Instance.Init();
+        //GlobalSessionManager.Instance.Init();
+        globalSessionManager = GlobalSessionManager.Instance;
+        globalSessionManager.Init();
 
 //        GlobalSessionManager.Instance.Get...();
 //...
@@ -37,7 +41,8 @@ public abstract class IGlobalDataManager : IDataManager {
         CommitChangesSpecifics();
 
 //        GlobalSessionManager.Save();
-        GlobalSessionManager.Instance.Save();
+        //GlobalSessionManager.Instance.Save();
+        globalSessionManager.Save();
     }
 
 //TODO: needed?

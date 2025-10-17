@@ -13,4 +13,8 @@ public class GlobalStateController : IStateController {
         return GlobalStateManager.Instance;
     }
 
+    public IGlobalDataManager GetGlobalData() {
+        return (IGlobalDataManager)stateManager.GetDataManager();
+    }
+
 }

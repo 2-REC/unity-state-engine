@@ -18,7 +18,7 @@ public abstract class IGraphLoader : object {
             id = StateIds.NONE;
             scene = null;
             next = StateIds.NONE;
-            restartable = true;
+            restartable = false;
             leavable = false;
         }
     }

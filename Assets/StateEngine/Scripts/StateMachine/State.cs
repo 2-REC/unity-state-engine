@@ -18,7 +18,7 @@ public class State {
         Next = next;
 
         Children = null;
-        Restartable = true;
+        Restartable = false;
         Leavable = false;
     }
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graph>
+	<states>
+		<state id="LEVEL" isLevel="true" leavable="true" next="LEVEL">
+			<children>
+				<child id="GAME_END"/>
+				<child id="GAME_OVER"/>
+			</children>
+		</state>
+		<state id="GAME_END" scene="GameEnd" leavable="true" />
+		<state id="GAME_OVER" scene="GameOver" leavable="true" />
+	</states>
+</graph>

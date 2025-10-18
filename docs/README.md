@@ -965,43 +965,46 @@ Default empty values, meaning the transition is ignored.
 
 
 
-
+---
 TODO: REMOVE FROM THIS DOC!?
 # Samples
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-TODO: CHANGE ALL
-
-?
-	## Basic (Starter?)
-		### Global
-			#### Data
-				xml + manager
-			#### State Graph
-		### Game
-			#### Data
-				xml + manager
-			#### State Graph
-			#### Levels
-	## Full (Ready?)
-		### Global
-			#### Data
-				xml + manager
-			#### State Graph
-			#### Scenes & State Controllers
-		### Game
-			#### Data
-				xml + manager
-			#### State Graph
-			#### Scenes & State Controllers
-			#### Levels
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Ready to use graphs and managers...
 +full project
 ...
+in:
+D:\DEREK\my_work\unity_TMP__state-engine-samples\UNITY-STATE-ENGINE\TMP\Samples
+
+
+- Graphs
+	- example graphs
+	- no data
+	- level success, fail
+	- game over, continue
+
+- Data
+	- minimal graphs
+		+ same state as 'next'
+		+ shared level scene
+	- data
+		- game (health + points)
+		- global (difficulty from menu)
+		- level (description)
+	- interactions
+		- hit button
+		- points button
+
+- LoadSave
+	- save/load games (+continue)
+
+
+TODO?
+- 4_full (hud?)
+	(ui, hits, points, save, pause menu, etc.)
+	=> from previous example...
+
+
 
 ## Global
 

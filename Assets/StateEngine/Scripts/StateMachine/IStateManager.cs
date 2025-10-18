@@ -77,7 +77,7 @@ public class IStateManager : MonoBehaviour {
             LoadState(stateId);
         } else {
             State state = states[CurrentStateId];
-            if (state.Children == null) {
+            if (state.Children == null && !state.Leavable) {
                 state = states[state.Next];
                 if (StateIds.NONE != state.Id) {
                     AsyncLoadScene();

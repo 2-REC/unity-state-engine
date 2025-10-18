@@ -86,7 +86,7 @@ public class IStateManager : MonoBehaviour {
         }
     }
 
-    // TODO: should be rewritten
+    // TODO: REWRITE ENTIRE METHOD!
     public void NextState() {
         CurrentStateId = stack.Pop();
 
@@ -110,8 +110,9 @@ public class IStateManager : MonoBehaviour {
             stack.Pop();
 
             int stateId = currentState.Next;
-            // TODO: correct test "CurrentStateId != StateIds.NONE"?
-            while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE)) {
+            // TODO: correct test "CurrentStateId != StateIds.NONE"? (seems useless)
+//            while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE)) {
+            while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE || !states[stateId].Restartable)) {
                 if (stack.Count == 0) {
                     Debug.Log("Stack is empty => Leaving graph");
                     LeaveGraph();
@@ -119,7 +120,6 @@ public class IStateManager : MonoBehaviour {
                 }
 
                 CurrentStateId = stack.Peek();
-                Debug.Log("CurrentStateId: " + CurrentStateId);
                 currentState = states[CurrentStateId];
                 if (currentState.Restartable) {
                     LoadState(CurrentStateId);

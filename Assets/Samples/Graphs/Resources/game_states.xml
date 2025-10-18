@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graph>
+	<states>
+		<state id="LEVEL" restartable="true" isLevel="true" next="QUIT_GAME">
+			<children>
+				<child id="SUCCESS"/>
+				<child id="FAILURE"/>
+			</children>
+		</state>
+		<state id="SUCCESS" scene="Success">
+			<children>
+				<child id="GAME_END"/>
+			</children>
+		</state>
+		<state id="FAILURE" scene="Failure">
+			<children>
+				<child id="GAME_OVER"/>
+			</children>
+		</state>
+		<state id="GAME_END" scene="GameEnd" next="QUIT_GAME"/>
+		<state id="GAME_OVER" scene="GameOver" next="CONTINUE">
+			<children>
+				<child id="QUIT_GAME"/>
+			</children>
+		</state>
+		<state id="CONTINUE" scene="Continue">
+			<children>
+				<child id="QUIT_GAME"/>
+			</children>
+		</state>
+		<state id="QUIT_GAME" scene="GameQuit" leavable="true"/>
+	</states>
+</graph>

@@ -131,4 +131,8 @@ public class GameSessionManager : ISessionManager {
         return loaded;
     }
 
+    public bool CheckExists(string filename) {
+        return FileManager.Exists(filename);
+    }
+
 }

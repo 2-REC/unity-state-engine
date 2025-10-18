@@ -45,6 +45,11 @@ public static class FileManager {
         return true;
     }
 
+    public static bool Exists(string filename) {
+        string path = Path.Combine(Application.persistentDataPath, filename) + ".json";
+        return File.Exists(path);
+    }
+
     public static void Delete(string filename) {
         string path = Path.Combine(Application.persistentDataPath, filename) + ".json";
         File.Delete(path);

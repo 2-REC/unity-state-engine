@@ -15,6 +15,7 @@ public abstract class IGameDataManager : IDataManager {
     private Dictionary<int, bool> availableLevels = new Dictionary<int, bool>();
 
     private int currentLevel = -1;
+    private int latestLevel = -1;
     private int lives = -1;
     private int continues = -1;
 
@@ -25,6 +26,7 @@ public abstract class IGameDataManager : IDataManager {
         //TODO: sure it's called before any other method?
         gameSessionManager = GameSessionManager.Instance;
         currentLevel = gameSessionManager.GetLevel();
+        latestLevel = currentLevel;
         //Debug.Log("GameDataManager:Load - level: " + currentLevel);
 
         lives = gameSessionManager.GetLives();
@@ -79,6 +81,10 @@ Debug.Log("levels:");
         gameSessionManager.Save();
     }
 
+    public void SaveGame(string filename) {
+        CommitChanges();
+        gameSessionManager.SaveGame(filename);
+    }
 
     private void SetLevels() {
         foreach (KeyValuePair<int, LevelNode> level in levels) {
@@ -141,6 +147,13 @@ Debug.Log("levels:");
 
         ResetLifeData();
 
+        if (lives <= 0) {
+            SetLevel(-1);
+        }
+
+        // TODO: OK here? (should be...)
+        CommitChanges();
+
         return lives;
     }
 
@@ -149,10 +162,19 @@ Debug.Log("levels:");
     }
 
     public int LoseContinue() {
+        if (!CanContinue()) {
+            return continues;
+        }
+
+        SetLevel(GetLatestLevel());
+
         continues -= 1;
         lives = gameSessionManager.GetInitialLives();
 
         ResetContinueData();
+
+        // TODO: OK here? (should be...)
+        CommitChanges();
 
         return continues;
     }
@@ -164,6 +186,12 @@ Debug.Log("levels:");
 
     public void SetLevel(int level) {
         currentLevel = level;
+        if (level != -1)
+            latestLevel = level;
+    }
+
+    public int GetLatestLevel() {
+        return latestLevel;
     }
 
     public LevelNode GetLevelNode() {
@@ -215,7 +243,6 @@ Debug.Log("levels:");
     public bool CanContinue() {
         return (continues > 0);
     }
-
 
     protected abstract void LoadSpecifics();
     protected abstract void CommitChangesSpecifics();

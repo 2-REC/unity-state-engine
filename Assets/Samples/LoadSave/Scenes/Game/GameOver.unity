@@ -1231,6 +1231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf056609759aacd439ea7f0dc952db31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leaveSceneName: Menu
 --- !u!1 &1963215060
 GameObject:
   m_ObjectHideFlags: 0

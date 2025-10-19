@@ -3,8 +3,11 @@ namespace SampleLoadSave {
 
     public class GameOverCtrl : GameStateController {
 
+        public string leaveSceneName;
+
         public bool CanContinue { get; private set; } = false;
         public int NbContinues { get; private set; } = 0;
+
 
         public override void HandleMainState() {
             CanContinue = GetGameData().CanContinue();
@@ -19,7 +22,7 @@ namespace SampleLoadSave {
         }
 
         public void Stop() {
-            Leave("Menu");
+            Leave(leaveSceneName);
         }
 
     }

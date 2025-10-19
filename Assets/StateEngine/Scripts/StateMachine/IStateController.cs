@@ -64,7 +64,9 @@ namespace StateEngine {
         protected void LoadChildState(string childId) {
             State state = stateManager.GetState(StateId);
             if ((state.Children != null) && state.Children.Contains(StateIds.Index(childId))) {
-                stateManager.SetState(StateIds.Index(childId));
+                // TODO: make sure it's ok
+                //stateManager.SetState(StateIds.Index(childId));
+                stateManager.SetState(StateIds.Index(childId), false);
             } else {
                 throw new Exception("IStateController: 'LoadChildState' can only be called with one of its children state!");
             }

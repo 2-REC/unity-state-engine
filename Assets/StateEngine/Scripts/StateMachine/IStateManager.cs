@@ -65,12 +65,14 @@ namespace StateEngine {
             return StateIds.NONE;
         }
 
-        public void SetState(int stateId) {
+        public void SetState(int stateId, bool push=true) {
             // TODO: does this cause issues? (when is this happening?)
             //if (CurrentStateId != stateId) {
             if (true) {
                 CurrentStateId = stateId;
-                stack.Push(stateId);
+Debug.Log($"PUSH (SetState): {CurrentStateId}");
+                if (push)
+                    stack.Push(stateId);
             }
 
             bool handled = OnStateChange();
@@ -91,6 +93,7 @@ namespace StateEngine {
         // TODO: REWRITE ENTIRE METHOD!
         public void NextState() {
             CurrentStateId = stack.Pop();
+Debug.Log($"POP (NextState): {CurrentStateId}");
 
             State state = states[CurrentStateId];
             int next = state.Next;
@@ -105,22 +108,24 @@ namespace StateEngine {
                 return;
             }
 
-            CurrentStateId = stack.Peek();
+            //CurrentStateId = stack.Peek();
+            CurrentStateId = stack.Pop();
             State currentState = states[CurrentStateId];
 
             if (!currentState.Restartable) {
-                stack.Pop();
+//                stack.Pop();
 
                 int stateId = currentState.Next;
                 // TODO: correct test "CurrentStateId != StateIds.NONE"? (seems useless)
-//                while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE)) {
-                while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE || !states[stateId].Restartable)) {
+                while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE)) {
+                //while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE || !states[stateId].Restartable)) {
                     if (stack.Count == 0) {
                         Debug.Log("Stack is empty => Leaving graph");
                         LeaveGraph();
                         return;
                     }
 
+                    /*
                     CurrentStateId = stack.Peek();
                     currentState = states[CurrentStateId];
                     if (currentState.Restartable) {
@@ -128,6 +133,14 @@ namespace StateEngine {
                         return;
                     }
                     stack.Pop();
+                    */
+                    CurrentStateId = stack.Pop();
+                    currentState = states[CurrentStateId];
+                    if (currentState.Restartable) {
+                        LoadState(CurrentStateId);
+                        return;
+                    }
+
                     stateId = currentState.Next;
                 }
                 LoadState(stateId);
@@ -141,7 +154,7 @@ namespace StateEngine {
             //if (CurrentStateId != stateId) {
             if (true) {
                 CurrentStateId = stateId;
-                stack.Push(stateId);
+//                stack.Push(stateId);
             }
 
             State state = states[CurrentStateId];

@@ -1670,7 +1670,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4080443429979200027, guid: 59f90f001486a704eb9cda18ce9c63a5, type: 3}
       propertyPath: m_Name
-      value: GlobalManager_LoadSave
+      value: GlobalManager
       objectReference: {fileID: 0}
     - target: {fileID: 6152430326042800575, guid: 59f90f001486a704eb9cda18ce9c63a5, type: 3}
       propertyPath: m_Enabled

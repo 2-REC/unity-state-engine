@@ -399,7 +399,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1642390410750779893, guid: 8245e4b3cd977c444a14e6a760387bc2, type: 3}
       propertyPath: m_Name
-      value: GlobalManager_Graphs
+      value: GlobalManager
       objectReference: {fileID: 0}
     - target: {fileID: 6050122703437292833, guid: 8245e4b3cd977c444a14e6a760387bc2, type: 3}
       propertyPath: m_LocalPosition.x

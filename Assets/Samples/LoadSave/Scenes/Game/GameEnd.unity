@@ -394,7 +394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7492585936257028172, guid: 577dd40b1a3197341b33a9a0ca6ce37b, type: 3}
       propertyPath: m_Name
-      value: GameManager_LoadSave
+      value: GameManager
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4514412724315261348, guid: 577dd40b1a3197341b33a9a0ca6ce37b, type: 3}

@@ -1,26 +1,30 @@
 using UnityEngine;
 
-public class GlobalManager : IManager {
+namespace StateEngine {
 
-    public GlobalStateManager globalStateManager;
-    public IGlobalDataManager globalDataManager;
+    public class GlobalManager : IManager {
 
-    public TextAsset globalStatesGraph;
-    public TextAsset gameData;
+        public GlobalStateManager globalStateManager;
+        public IGlobalDataManager globalDataManager;
 
-    protected override void InstantiateStateManager() {
-        GlobalStateManager.xmlGraph = globalStatesGraph;
-        Instantiate(globalStateManager);
-    }
+        public TextAsset globalStatesGraph;
+        public TextAsset gameData;
 
-    protected override IStateManager GetStateManager() {
-        return GlobalStateManager.Instance;
-    }
+        protected override void InstantiateStateManager() {
+            GlobalStateManager.xmlGraph = globalStatesGraph;
+            Instantiate(globalStateManager);
+        }
 
-    protected override IDataManager InstantiateDataManager() {
-        //IGameDataManager.xmlGameData = gameData;
-        IGlobalDataManager.xmlGameData = gameData;
-        return Instantiate(globalDataManager);
+        protected override IStateManager GetStateManager() {
+            return GlobalStateManager.Instance;
+        }
+
+        protected override IDataManager InstantiateDataManager() {
+            //IGameDataManager.xmlGameData = gameData;
+            IGlobalDataManager.xmlGameData = gameData;
+            return Instantiate(globalDataManager);
+        }
+
     }
 
 }

@@ -6,18 +6,22 @@ TODO: move to doc
 - leavable: if "true", can leave graph from this state (load another scene or exit app)
 */
 
-public class GameState : State {
+namespace StateEngine {
 
-    public bool IsLevel { get; private set; }
+    public class GameState : State {
+
+        public bool IsLevel { get; private set; }
 
 
-    public GameState(int id, string scene, int next)
-            : base(id, scene, next) {
-        IsLevel = false;
-    }
+        public GameState(int id, string scene, int next)
+                : base(id, scene, next) {
+            IsLevel = false;
+        }
 
-    public void SetIsLevel(bool isLevel) {
-        IsLevel = isLevel;
+        public void SetIsLevel(bool isLevel) {
+            IsLevel = isLevel;
+        }
+
     }
 
 }

@@ -10,48 +10,52 @@
 
 using UnityEngine;
 
-public abstract class IGlobalDataManager : IDataManager {
+namespace StateEngine {
 
-    public static TextAsset xmlGameData;
+    public abstract class IGlobalDataManager : IDataManager {
 
-    protected GlobalSessionManager globalSessionManager;
+        public static TextAsset xmlGameData;
 
-    // Get global data
-    protected override void LoadData() {
-        //TODO: OK HERE?
-        //GlobalSessionManager.Instance.Init();
-        globalSessionManager = GlobalSessionManager.Instance;
-        globalSessionManager.Init();
+        protected GlobalSessionManager globalSessionManager;
 
-//        GlobalSessionManager.Instance.Get...();
+        // Get global data
+        protected override void LoadData() {
+            //TODO: OK HERE?
+            //GlobalSessionManager.Instance.Init();
+            globalSessionManager = GlobalSessionManager.Instance;
+            globalSessionManager.Init();
+
+//            GlobalSessionManager.Instance.Get...();
 //...
 
-        LoadSpecifics();
+            LoadSpecifics();
 
-        //TODO: OK HERE?
-        GameSessionManager.xmlGameData = xmlGameData;
-        GameSessionManager.Instance.Load();
-    }
+            //TODO: OK HERE?
+            GameSessionManager.xmlGameData = xmlGameData;
+            GameSessionManager.Instance.Load();
+        }
 
-    // Save global data
-    public override void CommitChanges() {
-//        GlobalSessionManager.Instance.Set...(...);
+        // Save global data
+        public override void CommitChanges() {
+//            GlobalSessionManager.Instance.Set...(...);
 //...
 
-        CommitChangesSpecifics();
+            CommitChangesSpecifics();
 
-//        GlobalSessionManager.Save();
-        //GlobalSessionManager.Instance.Save();
-        globalSessionManager.Save();
-    }
+//            GlobalSessionManager.Save();
+//GlobalSessionManager.Instance.Save();
+            globalSessionManager.Save();
+        }
 
 //TODO: needed?
 /*
-    public override void Leave() {
-    }
+        public override void Leave() {
+        }
 */
 
-    protected abstract void LoadSpecifics();
-    protected abstract void CommitChangesSpecifics();
+        protected abstract void LoadSpecifics();
+        protected abstract void CommitChangesSpecifics();
+
+    }
 
 }

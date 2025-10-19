@@ -1,51 +1,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ISessionManager : MonoBehaviour {
+namespace StateEngine {
 
-    private string DATA_FILE;
+    public abstract class ISessionManager : MonoBehaviour {
 
-    protected Dictionary<string, int> fields;
+        private string DATA_FILE;
+
+        protected Dictionary<string, int> fields;
 
 
-    protected ISessionManager() {
-        fields = new Dictionary<string, int>();
-    }
-
-    protected void SetFile(string filename) {
-        DATA_FILE = filename;
-    }
-
-    public void Clear() {
-        fields.Clear();
-        //TODO: should be saved somewhere else (crypted & inaccessible)!
-        FileManager.Delete(DATA_FILE);
-    }
-
-    public int GetField(string name, int defaultValue) {
-        if (fields.TryGetValue(name, out int value)) {
-            return value;
+        protected ISessionManager() {
+            fields = new Dictionary<string, int>();
         }
-        return defaultValue;
-    }
 
-    public int GetField(string name) {
-        return GetField(name, 0);
-    }
+        protected void SetFile(string filename) {
+            DATA_FILE = filename;
+        }
 
-    public void SetField(string name, int value) {
-        fields[name] = value;
-    }
+        public void Clear() {
+            fields.Clear();
+            //TODO: should be saved somewhere else (crypted & inaccessible)!
+            FileManager.Delete(DATA_FILE);
+        }
 
-    public void Save() {
-        //TODO: should be saved somewhere else (crypted & inaccessible)!
-        FileManager.Save(DATA_FILE, fields);
-    }
+        public int GetField(string name, int defaultValue) {
+            if (fields.TryGetValue(name, out int value)) {
+                return value;
+            }
+            return defaultValue;
+        }
 
-    public bool Load() {
-        fields.Clear();
-        //TODO: should be saved somewhere else (crypted & inaccessible)!
-        return FileManager.Load(DATA_FILE, fields);
+        public int GetField(string name) {
+            return GetField(name, 0);
+        }
+
+        public void SetField(string name, int value) {
+            fields[name] = value;
+        }
+
+        public void Save() {
+            //TODO: should be saved somewhere else (crypted & inaccessible)!
+            FileManager.Save(DATA_FILE, fields);
+        }
+
+        public bool Load() {
+            fields.Clear();
+            //TODO: should be saved somewhere else (crypted & inaccessible)!
+            return FileManager.Load(DATA_FILE, fields);
+        }
+
     }
 
 }

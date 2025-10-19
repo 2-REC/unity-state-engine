@@ -7,14 +7,20 @@ SHOULDN'T BE HANDLED IN STATE MANAGERS BUT IN OTHER SCRIPTS/OBJECTS
     => states with children can derive this class and call "LoadChildState"
     => states leaving the graph can derive this class and call "Leave"
 */
-public class GlobalStateController : IStateController {
 
-    protected override IStateManager GetStateManager() {
-        return GlobalStateManager.Instance;
-    }
+namespace StateEngine {
 
-    public IGlobalDataManager GetGlobalData() {
-        return (IGlobalDataManager)stateManager.GetDataManager();
+    public class GlobalStateController : IStateController {
+
+        protected override IStateManager GetStateManager() {
+            return GlobalStateManager.Instance;
+        }
+
+        public IGlobalDataManager GetGlobalData() {
+            return (IGlobalDataManager)stateManager.GetDataManager();
+        }
+
     }
 
 }
+

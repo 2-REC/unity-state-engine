@@ -1,4 +1,5 @@
 /* Empty methods as no game data in this sample. */
+using StateEngine;
 
 namespace SampleGraphs {
 

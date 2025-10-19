@@ -1,45 +1,49 @@
 using System.Collections.Generic;
 
-public class LevelNode {
+namespace StateEngine {
 
-    public int Id { get; private set; }
-    public string Scene { get; private set; }
-    public string Name { get; private set; }
-    public bool Startup { get; private set; }
-    public List<int> Next { get; private set; }
+    public class LevelNode {
 
-    public Dictionary<string, string> Data { get; private set; } = new();
+        public int Id { get; private set; }
+        public string Scene { get; private set; }
+        public string Name { get; private set; }
+        public bool Startup { get; private set; }
+        public List<int> Next { get; private set; }
 
-    public bool Completed { get; set; }
+        public Dictionary<string, string> Data { get; private set; } = new();
+
+        public bool Completed { get; set; }
 
 
-    public LevelNode(int id, string scene, string name) {
-        Id = id;
-        Scene = scene;
-        Name = name;
+        public LevelNode(int id, string scene, string name) {
+            Id = id;
+            Scene = scene;
+            Name = name;
 
-        Startup = false;
-        Next = null;
-        Completed = false;
-    }
+            Startup = false;
+            Next = null;
+            Completed = false;
+        }
 
-    public LevelNode(int id, string scene, string name, bool startup) {
-        Id = id;
-        Scene = scene;
-        Name = name;
-        Startup = startup;
+        public LevelNode(int id, string scene, string name, bool startup) {
+            Id = id;
+            Scene = scene;
+            Name = name;
+            Startup = startup;
 
-        Next = null;
-        Completed = false;
-    }
+            Next = null;
+            Completed = false;
+        }
 
-    public void AddNext(int nextId) {
-        Next ??= new List<int>();
-        Next.Add(nextId);
-    }
+        public void AddNext(int nextId) {
+            Next ??= new List<int>();
+            Next.Add(nextId);
+        }
 
-    public void SetData(Dictionary<string, string> data) {
-        Data = data;
+        public void SetData(Dictionary<string, string> data) {
+            Data = data;
+        }
+
     }
 
 }

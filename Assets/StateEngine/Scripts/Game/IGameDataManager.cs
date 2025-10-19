@@ -1,255 +1,259 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class IGameDataManager : IDataManager {
+namespace StateEngine {
 
-    public static TextAsset xmlGameData;
-    public static TextAsset xmlGameLevels;
+    public abstract class IGameDataManager : IDataManager {
 
-//?    protected GameSessionManager gameSessionManager = GameSessionManager.Instance;
-    protected GameSessionManager gameSessionManager;
+        public static TextAsset xmlGameData;
+        public static TextAsset xmlGameLevels;
 
-    // list of all levels
-    private Dictionary<int, LevelNode> levels;
-    // list of available levels & their status
-    private Dictionary<int, bool> availableLevels = new Dictionary<int, bool>();
+//?        protected GameSessionManager gameSessionManager = GameSessionManager.Instance;
+        protected GameSessionManager gameSessionManager;
 
-    private int currentLevel = -1;
-    private int latestLevel = -1;
-    private int lives = -1;
-    private int continues = -1;
+        // list of all levels
+        private Dictionary<int, LevelNode> levels;
+        // list of available levels & their status
+        private Dictionary<int, bool> availableLevels = new Dictionary<int, bool>();
+
+        private int currentLevel = -1;
+        private int latestLevel = -1;
+        private int lives = -1;
+        private int continues = -1;
 
 
-    // Get game data
-    protected override void LoadData() {
-        GameSessionManager.xmlGameData = xmlGameData;
-        //TODO: sure it's called before any other method?
-        gameSessionManager = GameSessionManager.Instance;
-        currentLevel = gameSessionManager.GetLevel();
-        latestLevel = currentLevel;
-        //Debug.Log("GameDataManager:Load - level: " + currentLevel);
+        // Get game data
+        protected override void LoadData() {
+            GameSessionManager.xmlGameData = xmlGameData;
+            //TODO: sure it's called before any other method?
+            gameSessionManager = GameSessionManager.Instance;
+            currentLevel = gameSessionManager.GetLevel();
+            latestLevel = currentLevel;
+            //Debug.Log("GameDataManager:Load - level: " + currentLevel);
 
-        lives = gameSessionManager.GetLives();
-        continues = gameSessionManager.GetContinues();
+            lives = gameSessionManager.GetLives();
+            continues = gameSessionManager.GetContinues();
 
-        LoadSpecifics();
+            LoadSpecifics();
 
-        //Debug.Log("GameDataManager:Load - lives: " + lives);
-        //Debug.Log("GameDataManager:Load - continues: " + continues);
+            //Debug.Log("GameDataManager:Load - lives: " + lives);
+            //Debug.Log("GameDataManager:Load - continues: " + continues);
 
-        levels = GameGraphLoader.LoadLevelGraph(xmlGameLevels);
-        foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (gameSessionManager.IsLevelCompleted(level.Key)) {
-                level.Value.Completed = true;
+            levels = GameGraphLoader.LoadLevelGraph(xmlGameLevels);
+            foreach (KeyValuePair<int, LevelNode> level in levels) {
+                if (gameSessionManager.IsLevelCompleted(level.Key)) {
+                    level.Value.Completed = true;
+                }
             }
-        }
 
 /*
 Debug.Log("levels:");
-        foreach(KeyValuePair<int, LevelNode> levelNode in gameDataManager.levels) {
-            LevelNode level = levelNode.Value;
-            Debug.Log("level");
-            Debug.Log("    id: " + level.id);
-            Debug.Log("    scene: " + level.scene);
+            foreach(KeyValuePair<int, LevelNode> levelNode in gameDataManager.levels) {
+                LevelNode level = levelNode.Value;
+                Debug.Log("level");
+                Debug.Log("    id: " + level.id);
+                Debug.Log("    scene: " + level.scene);
 
-            if (level.next != null) {
-                for (int j=0; j<level.next.Count; ++j) {
-                    Debug.Log("    next: " + level.next[j]);
+                if (level.next != null) {
+                    for (int j=0; j<level.next.Count; ++j) {
+                        Debug.Log("    next: " + level.next[j]);
+                    }
                 }
             }
-        }
 */
 
-        SetLevels();
-    }
-
-    // Save game data
-    public override void CommitChanges() {
-        // update game values
-        gameSessionManager.SetLives(lives);
-        gameSessionManager.SetContinues(continues);
-
-        CommitChangesSpecifics();
-
-        gameSessionManager.SetLevel(currentLevel);
-
-        foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (level.Value.Completed) {
-                gameSessionManager.SetLevelCompleted(level.Key);
-            }
+            SetLevels();
         }
-        gameSessionManager.Save();
-    }
 
-    public void SaveGame(string filename) {
-        CommitChanges();
-        gameSessionManager.SaveGame(filename);
-    }
+        // Save game data
+        public override void CommitChanges() {
+            // update game values
+            gameSessionManager.SetLives(lives);
+            gameSessionManager.SetContinues(continues);
 
-    private void SetLevels() {
-        foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (level.Value.Startup) {
-                availableLevels.Add(level.Key, level.Value.Completed);
+            CommitChangesSpecifics();
+
+            gameSessionManager.SetLevel(currentLevel);
+
+            foreach (KeyValuePair<int, LevelNode> level in levels) {
                 if (level.Value.Completed) {
-                    UpdateLevels(level.Key);
+                    gameSessionManager.SetLevelCompleted(level.Key);
                 }
             }
+            gameSessionManager.Save();
         }
-    }
 
-    private void UpdateLevels(int level) {
-        List<int> next = levels[level].Next;
-        if (next != null) {
-            for (int i = 0; i < next.Count; ++i) {
-                if (!availableLevels.ContainsKey(next[i])) {
-                    availableLevels.Add(next[i], levels[next[i]].Completed);
-                    if (levels[next[i]].Completed) {
-                        UpdateLevels(next[i]);
+        public void SaveGame(string filename) {
+            CommitChanges();
+            gameSessionManager.SaveGame(filename);
+        }
+
+        private void SetLevels() {
+            foreach (KeyValuePair<int, LevelNode> level in levels) {
+                if (level.Value.Startup) {
+                    availableLevels.Add(level.Key, level.Value.Completed);
+                    if (level.Value.Completed) {
+                        UpdateLevels(level.Key);
                     }
                 }
             }
         }
-    }
 
-    public bool IsLevelCompleted(int level) {
-        if (availableLevels.ContainsKey(level)) {
-            return availableLevels[level];
+        private void UpdateLevels(int level) {
+            List<int> next = levels[level].Next;
+            if (next != null) {
+                for (int i = 0; i < next.Count; ++i) {
+                    if (!availableLevels.ContainsKey(next[i])) {
+                        availableLevels.Add(next[i], levels[next[i]].Completed);
+                        if (levels[next[i]].Completed) {
+                            UpdateLevels(next[i]);
+                        }
+                    }
+                }
+            }
         }
-        // !!!! ???? TODO: true or false ? ???? !!!!
-        return false;
-    }
 
-    public void SetLevelCompleted() {
-        if (currentLevel != -1) {
-            levels[currentLevel].Completed = true;
-            availableLevels[currentLevel] = true;
-            UpdateLevels(currentLevel);
+        public bool IsLevelCompleted(int level) {
+            if (availableLevels.ContainsKey(level)) {
+                return availableLevels[level];
+            }
+            // !!!! ???? TODO: true or false ? ???? !!!!
+            return false;
         }
-    }
 
-    public override void Leave() {
-        if (currentLevel == -1) {
-            gameSessionManager.Clear();
-        } else {
+        public void SetLevelCompleted() {
+            if (currentLevel != -1) {
+                levels[currentLevel].Completed = true;
+                availableLevels[currentLevel] = true;
+                UpdateLevels(currentLevel);
+            }
+        }
+
+        public override void Leave() {
+            if (currentLevel == -1) {
+                gameSessionManager.Clear();
+            } else {
+                CommitChanges();
+            }
+
+            loaded = false;
+            availableLevels.Clear();
+        }
+
+        public int GetLives() {
+            return lives;
+        }
+
+        public int LoseLife() {
+            lives -= 1;
+
+            ResetLifeData();
+
+            if (lives <= 0) {
+                SetLevel(-1);
+            }
+
+            // TODO: OK here? (should be...)
             CommitChanges();
+
+            return lives;
         }
 
-        loaded = false;
-        availableLevels.Clear();
-    }
-
-    public int GetLives() {
-        return lives;
-    }
-
-    public int LoseLife() {
-        lives -= 1;
-
-        ResetLifeData();
-
-        if (lives <= 0) {
-            SetLevel(-1);
-        }
-
-        // TODO: OK here? (should be...)
-        CommitChanges();
-
-        return lives;
-    }
-
-    public int GetContinues() {
-        return continues;
-    }
-
-    public int LoseContinue() {
-        if (!CanContinue()) {
+        public int GetContinues() {
             return continues;
         }
 
-        SetLevel(GetLatestLevel());
-
-        continues -= 1;
-        lives = gameSessionManager.GetInitialLives();
-
-        ResetContinueData();
-
-        // TODO: OK here? (should be...)
-        CommitChanges();
-
-        return continues;
-    }
-
-
-    public int GetLevel() {
-        return currentLevel;
-    }
-
-    public void SetLevel(int level) {
-        currentLevel = level;
-        if (level != -1)
-            latestLevel = level;
-    }
-
-    public int GetLatestLevel() {
-        return latestLevel;
-    }
-
-    public LevelNode GetLevelNode() {
-        if (currentLevel != -1) {
-            return levels[currentLevel];
-        }
-        return null;
-    }
-
-    public string GetSceneName() {
-        if (currentLevel != -1) {
-            return levels[currentLevel].Scene;
-        }
-        return null;
-    }
-
-    public string GetLevelName() {
-        if (currentLevel != -1) {
-            return levels[currentLevel].Name;
-        }
-        return null;
-    }
-
-    public List<int> GetNextLevels(int level) {
-        // TODO: or error?
-        if (level == -1 || level >= levels.Count)
-            return new List<int>();
-
-        return levels[level].Next;
-    }
-
-    public Dictionary<int, bool> GetAvailableLevels() {
-        return availableLevels;
-    }
-
-    public bool IsGameOver() {
-        return (lives <= 0);
-    }
-
-    public bool IsGameComplete() {
-        foreach (KeyValuePair<int, LevelNode> level in levels) {
-            if (!level.Value.Completed) {
-                 return false;
+        public int LoseContinue() {
+            if (!CanContinue()) {
+                return continues;
             }
+
+            SetLevel(GetLatestLevel());
+
+            continues -= 1;
+            lives = gameSessionManager.GetInitialLives();
+
+            ResetContinueData();
+
+            // TODO: OK here? (should be...)
+            CommitChanges();
+
+            return continues;
         }
-        return true;
+
+
+        public int GetLevel() {
+            return currentLevel;
+        }
+
+        public void SetLevel(int level) {
+            currentLevel = level;
+            if (level != -1)
+                latestLevel = level;
+        }
+
+        public int GetLatestLevel() {
+            return latestLevel;
+        }
+
+        public LevelNode GetLevelNode() {
+            if (currentLevel != -1) {
+                return levels[currentLevel];
+            }
+            return null;
+        }
+
+        public string GetSceneName() {
+            if (currentLevel != -1) {
+                return levels[currentLevel].Scene;
+            }
+            return null;
+        }
+
+        public string GetLevelName() {
+            if (currentLevel != -1) {
+                return levels[currentLevel].Name;
+            }
+            return null;
+        }
+
+        public List<int> GetNextLevels(int level) {
+            // TODO: or error?
+            if (level == -1 || level >= levels.Count)
+                return new List<int>();
+
+            return levels[level].Next;
+        }
+
+        public Dictionary<int, bool> GetAvailableLevels() {
+            return availableLevels;
+        }
+
+        public bool IsGameOver() {
+            return (lives <= 0);
+        }
+
+        public bool IsGameComplete() {
+            foreach (KeyValuePair<int, LevelNode> level in levels) {
+                if (!level.Value.Completed) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool CanContinue() {
+            return (continues > 0);
+        }
+
+        protected abstract void LoadSpecifics();
+        protected abstract void CommitChangesSpecifics();
+
+        // called when losing a life
+        protected abstract void ResetLifeData();
+        // called when losing a continue
+        protected abstract void ResetContinueData();
+
     }
-
-    public bool CanContinue() {
-        return (continues > 0);
-    }
-
-    protected abstract void LoadSpecifics();
-    protected abstract void CommitChangesSpecifics();
-
-    // called when losing a life
-    protected abstract void ResetLifeData();
-    // called when losing a continue
-    protected abstract void ResetContinueData();
 
 }

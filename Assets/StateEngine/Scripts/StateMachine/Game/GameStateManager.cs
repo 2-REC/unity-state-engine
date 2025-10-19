@@ -4,53 +4,57 @@ If want to use Global data in game, uncomment the "GLOBAL_IN_GAME" blocks.
 
 using UnityEngine;
 
-public class GameStateManager : IStateManager {
+namespace StateEngine {
 
-    /*
-    //TODO: set as editor field, saved in prefab
-    public static string GRAPH_XML = "Xml/game_states";
-    */
-    public static TextAsset xmlGraph;
+    public class GameStateManager : IStateManager {
 
-    //////// GLOBAL_IN_GAME - BEGIN
-    private IGlobalDataManager globalDataManager = null;
-    //////// GLOBAL_IN_GAME - END
+        /*
+        //TODO: set as editor field, saved in prefab
+        public static string GRAPH_XML = "Xml/game_states";
+        */
+        public static TextAsset xmlGraph;
+
+        //////// GLOBAL_IN_GAME - BEGIN
+        private IGlobalDataManager globalDataManager = null;
+        //////// GLOBAL_IN_GAME - END
 
 
-    public static GameStateManager Instance {
-        get {
-            if (instance == null) {
-                GameObject go = new GameObject("GameStateManager");
-                instance = go.AddComponent<GameStateManager>();
-                DontDestroyOnLoad(instance);
-                //instance.Load(new GameGraphLoader(GRAPH_XML));
-                instance.Load(new GameGraphLoader(xmlGraph));
-            }
-            return (GameStateManager)instance;
-        }
-    }
-
-    protected override string GetSceneName(State state) {
-        GameState gameState = (GameState)state;
-        if (gameState.IsLevel) {
-            string effectiveScene = ((IGameDataManager)dataManager).GetSceneName();
-            if ((effectiveScene != null) && !"".Equals(effectiveScene)) {
-                return effectiveScene;
+        public static GameStateManager Instance {
+            get {
+                if (instance == null) {
+                    GameObject go = new GameObject("GameStateManager");
+                    instance = go.AddComponent<GameStateManager>();
+                    DontDestroyOnLoad(instance);
+                    //instance.Load(new GameGraphLoader(GRAPH_XML));
+                    instance.Load(new GameGraphLoader(xmlGraph));
+                }
+                return (GameStateManager)instance;
             }
         }
-        return state.Scene;
-    }
 
-    //////// GLOBAL_IN_GAME - BEGIN
-    public void SetGlobalDataManager(IGlobalDataManager globalDataManager) {
-        if (this.globalDataManager == null) {
-            this.globalDataManager = globalDataManager;
+        protected override string GetSceneName(State state) {
+            GameState gameState = (GameState)state;
+            if (gameState.IsLevel) {
+                string effectiveScene = ((IGameDataManager)dataManager).GetSceneName();
+                if ((effectiveScene != null) && !"".Equals(effectiveScene)) {
+                    return effectiveScene;
+                }
+            }
+            return state.Scene;
         }
-    }
 
-    public IGlobalDataManager GetGlobalDataManager() {
-        return globalDataManager;
+        //////// GLOBAL_IN_GAME - BEGIN
+        public void SetGlobalDataManager(IGlobalDataManager globalDataManager) {
+            if (this.globalDataManager == null) {
+                this.globalDataManager = globalDataManager;
+            }
+        }
+
+        public IGlobalDataManager GetGlobalDataManager() {
+            return globalDataManager;
+        }
+        //////// GLOBAL_IN_GAME - END
+
     }
-    //////// GLOBAL_IN_GAME - END
 
 }

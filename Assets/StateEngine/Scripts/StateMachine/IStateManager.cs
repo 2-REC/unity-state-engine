@@ -3,222 +3,226 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public delegate bool OnStateChangeHandler();
+namespace StateEngine {
 
-public class IStateManager : MonoBehaviour {
+    public delegate bool OnStateChangeHandler();
+
+    public class IStateManager : MonoBehaviour {
 
 //TODO: get from settings/config...?
-//    public static string GRAPH_XML;
+//        public static string GRAPH_XML;
 
-    public event OnStateChangeHandler OnStateChange;
-    public int CurrentStateId { get; private set; }
+        public event OnStateChangeHandler OnStateChange;
+        public int CurrentStateId { get; private set; }
 
-    protected static IStateManager instance = null;
+        protected static IStateManager instance = null;
 
-    protected IDataManager dataManager = null;
+        protected IDataManager dataManager = null;
 
-    private State[] states;
-    private Stack<int> stack;
+        private State[] states;
+        private Stack<int> stack;
 
-    private AsyncOperation async;
-    private bool isAsync;
+        private AsyncOperation async;
+        private bool isAsync;
 
 
-    protected IStateManager() {
-        isAsync = false;
+        protected IStateManager() {
+            isAsync = false;
 
-        // TODO: make sure ok here (needed BEFORE loading new graph)
-        StateIds.Reset();
+            // TODO: make sure ok here (needed BEFORE loading new graph)
+            StateIds.Reset();
 
-        stack = new Stack<int>();
-        stack.Push(StateIds.NONE);
-        CurrentStateId = StateIds.NONE;
-    }
+            stack = new Stack<int>();
+            stack.Push(StateIds.NONE);
+            CurrentStateId = StateIds.NONE;
+        }
 
 /*
-//    void Load() {
-    public void Load() {
-        GraphLoader graphLoader = new GraphLoader(GRAPH_XML);
-        states = graphLoader.LoadStateGraph();
-    }
+//        void Load() {
+        public void Load() {
+            GraphLoader graphLoader = new GraphLoader(GRAPH_XML);
+            states = graphLoader.LoadStateGraph();
+        }
 */
-    public void Load(IGraphLoader graphLoader) {
-        states = graphLoader.LoadStateGraph();
-    }
-
-    public static bool IsInstance() {
-        return (instance != null);
-    }
-
-    public State GetState(int stateId) {
-        return states[stateId];
-    }
-
-    public int GetStateId(string sceneName) {
-        foreach (State state in states) {
-            if (GetSceneName(state) == sceneName) {
-                return state.Id;
-            }
-        }
-        return StateIds.NONE;
-    }
-
-    public void SetState(int stateId) {
-        // TODO: does this cause issues? (when is this happening?)
-        //if (CurrentStateId != stateId) {
-        if (true) {
-            CurrentStateId = stateId;
-            stack.Push(stateId);
+        public void Load(IGraphLoader graphLoader) {
+            states = graphLoader.LoadStateGraph();
         }
 
-        bool handled = OnStateChange();
+        public static bool IsInstance() {
+            return (instance != null);
+        }
 
-        if (!handled) {
-            LoadState(stateId);
-        } else {
-            State state = states[CurrentStateId];
-            if (state.Children == null && !state.Leavable) {
-                state = states[state.Next];
-                if (StateIds.NONE != state.Id) {
-                    AsyncLoadScene();
+        public State GetState(int stateId) {
+            return states[stateId];
+        }
+
+        public int GetStateId(string sceneName) {
+            foreach (State state in states) {
+                if (GetSceneName(state) == sceneName) {
+                    return state.Id;
                 }
             }
-        }
-    }
-
-    // TODO: REWRITE ENTIRE METHOD!
-    public void NextState() {
-        CurrentStateId = stack.Pop();
-
-        State state = states[CurrentStateId];
-        int next = state.Next;
-        if (next != StateIds.NONE) {
-            LoadState(next);
-            return;
+            return StateIds.NONE;
         }
 
-        if (stack.Count == 0) {
-            Debug.Log("Stack is empty => Leaving graph");
-            LeaveGraph();
-            return;
-        }
-
-        CurrentStateId = stack.Peek();
-        State currentState = states[CurrentStateId];
-
-        if (!currentState.Restartable) {
-            stack.Pop();
-
-            int stateId = currentState.Next;
-            // TODO: correct test "CurrentStateId != StateIds.NONE"? (seems useless)
-//            while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE)) {
-            while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE || !states[stateId].Restartable)) {
-                if (stack.Count == 0) {
-                    Debug.Log("Stack is empty => Leaving graph");
-                    LeaveGraph();
-                    return;
-                }
-
-                CurrentStateId = stack.Peek();
-                currentState = states[CurrentStateId];
-                if (currentState.Restartable) {
-                    LoadState(CurrentStateId);
-                    return;
-                }
-                stack.Pop();
-                stateId = currentState.Next;
+        public void SetState(int stateId) {
+            // TODO: does this cause issues? (when is this happening?)
+            //if (CurrentStateId != stateId) {
+            if (true) {
+                CurrentStateId = stateId;
+                stack.Push(stateId);
             }
-            LoadState(stateId);
-        } else {
-            LoadState(CurrentStateId);
-        }
-    }
 
-    private void LoadState(int stateId) {
-        // TODO: does this cause issues? (needed if want same state as 'next' state, eg: LEVEL)
-        //if (CurrentStateId != stateId) {
-        if (true) {
-            CurrentStateId = stateId;
-            stack.Push(stateId);
-        }
+            bool handled = OnStateChange();
 
-        State state = states[CurrentStateId];
-        string scene = GetSceneName(state);
-        if (!string.IsNullOrEmpty(scene)) {
-            if (isAsync) {
-                ActivateScene();
+            if (!handled) {
+                LoadState(stateId);
             } else {
-                SceneManager.LoadScene(scene);
+                State state = states[CurrentStateId];
+                if (state.Children == null && !state.Leavable) {
+                    state = states[state.Next];
+                    if (StateIds.NONE != state.Id) {
+                        AsyncLoadScene();
+                    }
+                }
             }
-        } else {
-            // TODO: should be an error (?)
-            Terminate();
         }
-    }
 
-    public void OnApplicationQuit() {
-        instance = null;
-    }
+        // TODO: REWRITE ENTIRE METHOD!
+        public void NextState() {
+            CurrentStateId = stack.Pop();
 
-    public void AsyncLoadScene() {
-        StartCoroutine("LoadScene");
-    }
+            State state = states[CurrentStateId];
+            int next = state.Next;
+            if (next != StateIds.NONE) {
+                LoadState(next);
+                return;
+            }
 
+            if (stack.Count == 0) {
+                Debug.Log("Stack is empty => Leaving graph");
+                LeaveGraph();
+                return;
+            }
 
-    IEnumerator LoadScene() {
-        //TODO: remove when finished developing?
-        Debug.LogWarning("ASYNC LOAD STARTED - " + "DO NOT EXIT PLAY MODE UNTIL SCENE LOADS... UNITY WILL CRASH");
+            CurrentStateId = stack.Peek();
+            State currentState = states[CurrentStateId];
 
-        State state = states[CurrentStateId];
-        state = states[state.Next];
+            if (!currentState.Restartable) {
+                stack.Pop();
 
-        async = SceneManager.LoadSceneAsync(GetSceneName(state));
+                int stateId = currentState.Next;
+                // TODO: correct test "CurrentStateId != StateIds.NONE"? (seems useless)
+//                while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE)) {
+                while ((CurrentStateId != StateIds.NONE) && (stateId == StateIds.NONE || !states[stateId].Restartable)) {
+                    if (stack.Count == 0) {
+                        Debug.Log("Stack is empty => Leaving graph");
+                        LeaveGraph();
+                        return;
+                    }
 
-        isAsync = true;
-        async.allowSceneActivation = false;
-        yield return async;
-    }
-
-    public void ActivateScene() {
-        isAsync = false;
-        async.allowSceneActivation = true;
-    }
-
-    public void LeaveGraph(string exitScene = "") {
-        dataManager.Leave();
-
-        if (!string.IsNullOrEmpty(exitScene)) {
-            //TODO: required?
-//?            instance = null;
-            Destroy(gameObject);
-            SceneManager.LoadScene(exitScene);
-        } else {
-            Terminate();
+                    CurrentStateId = stack.Peek();
+                    currentState = states[CurrentStateId];
+                    if (currentState.Restartable) {
+                        LoadState(CurrentStateId);
+                        return;
+                    }
+                    stack.Pop();
+                    stateId = currentState.Next;
+                }
+                LoadState(stateId);
+            } else {
+                LoadState(CurrentStateId);
+            }
         }
-    }
 
-    protected virtual string GetSceneName(State state) {
-        return state.Scene;
-    }
+        private void LoadState(int stateId) {
+            // TODO: does this cause issues? (needed if want same state as 'next' state, eg: LEVEL)
+            //if (CurrentStateId != stateId) {
+            if (true) {
+                CurrentStateId = stateId;
+                stack.Push(stateId);
+            }
 
-    public void Terminate() {
+            State state = states[CurrentStateId];
+            string scene = GetSceneName(state);
+            if (!string.IsNullOrEmpty(scene)) {
+                if (isAsync) {
+                    ActivateScene();
+                } else {
+                    SceneManager.LoadScene(scene);
+                }
+            } else {
+                // TODO: should be an error (?)
+                Terminate();
+            }
+        }
+
+        public void OnApplicationQuit() {
+            instance = null;
+        }
+
+        public void AsyncLoadScene() {
+            StartCoroutine("LoadScene");
+        }
+
+
+        IEnumerator LoadScene() {
+            //TODO: remove when finished developing?
+            Debug.LogWarning("ASYNC LOAD STARTED - " + "DO NOT EXIT PLAY MODE UNTIL SCENE LOADS... UNITY WILL CRASH");
+
+            State state = states[CurrentStateId];
+            state = states[state.Next];
+
+            async = SceneManager.LoadSceneAsync(GetSceneName(state));
+
+            isAsync = true;
+            async.allowSceneActivation = false;
+            yield return async;
+        }
+
+        public void ActivateScene() {
+            isAsync = false;
+            async.allowSceneActivation = true;
+        }
+
+        public void LeaveGraph(string exitScene = "") {
+            dataManager.Leave();
+
+            if (!string.IsNullOrEmpty(exitScene)) {
+//TODO: required?
+//?                instance = null;
+                Destroy(gameObject);
+                SceneManager.LoadScene(exitScene);
+            } else {
+                Terminate();
+            }
+        }
+
+        protected virtual string GetSceneName(State state) {
+            return state.Scene;
+        }
+
+        public void Terminate() {
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.ExitPlaymode();
+            UnityEditor.EditorApplication.ExitPlaymode();
 #else
         Destroy(gameObject);
         Application.Quit();
 #endif
-    }
-
-
-    public void SetDataManager(IDataManager dataManager) {
-        if (this.dataManager == null) {
-            this.dataManager = dataManager;
         }
-    }
 
-    public IDataManager GetDataManager() {
-        return dataManager;
+
+        public void SetDataManager(IDataManager dataManager) {
+            if (this.dataManager == null) {
+                this.dataManager = dataManager;
+            }
+        }
+
+        public IDataManager GetDataManager() {
+            return dataManager;
+        }
+
     }
 
 }

@@ -1,3 +1,4 @@
+using StateEngine;
 
 public class GameDataManager : IGameDataManager {
     // Declare a property for each game field defined in "values.xml".

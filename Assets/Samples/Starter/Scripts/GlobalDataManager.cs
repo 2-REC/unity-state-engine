@@ -1,3 +1,4 @@
+using StateEngine;
 
 public class GlobalDataManager : IGlobalDataManager {
     /* Declare a property for each global field. */

@@ -3,8 +3,10 @@ namespace SampleGraphs {
 
     public class GameQuitCtrl : GameStateController {
 
+        public string gameSceneName;
+
         public void QuitGame() {
-            Leave("Menu");
+            Leave(gameSceneName);
         }
 
     }

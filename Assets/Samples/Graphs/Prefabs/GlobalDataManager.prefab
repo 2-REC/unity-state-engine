@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1688970738090437373}
   - component: {fileID: 2212156630317264151}
   m_Layer: 0
-  m_Name: GlobalDataManager_Graphs
+  m_Name: GlobalDataManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

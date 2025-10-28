@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graph>
+	<states>
+		<state id="MENU" scene="Menu" restartable="true" next="QUIT">
+			<children>
+				<child id="NEW_GAME"/>
+			</children>
+		</state>
+		<state id="NEW_GAME" scene="NewGame" leavable="true"/>
+		<state id="QUIT" scene="Quit" leavable="true"/>
+	</states>
+</graph>

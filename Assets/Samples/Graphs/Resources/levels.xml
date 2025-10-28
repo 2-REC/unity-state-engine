@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<levels>
+	<level id="1" name="Level 1" scene="Level1" startup="true">
+		<nextLevels>
+			<nextLevel id="2"/>
+		</nextLevels>
+	</level>
+	<level id="2" name="Level 2" scene="Level2">
+		<nextLevels>
+			<nextLevel id="3"/>
+		</nextLevels>
+	</level>
+	<level id="3" name="Level 3" scene="Level3" />
+</levels>

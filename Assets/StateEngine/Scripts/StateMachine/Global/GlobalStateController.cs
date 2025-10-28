@@ -1,0 +1,26 @@
+/*
+ALL STUFF RELATED TO GAME (DIFFICULTY, LEVEL, BEGIN ANIM, ETC)
+SHOULDN'T BE HANDLED IN STATE MANAGERS BUT IN OTHER SCRIPTS/OBJECTS
+    => other objects just have to call "End" when done with scene...
+    => StateControllers are simpler: only have to call "End" - or "LoadChildState" or "Leave" for specific states
+    => states without children can use this script
+    => states with children can derive this class and call "LoadChildState"
+    => states leaving the graph can derive this class and call "Leave"
+*/
+
+namespace StateEngine {
+
+    public class GlobalStateController : IStateController {
+
+        protected override IStateManager GetStateManager() {
+            return GlobalStateManager.Instance;
+        }
+
+        public IGlobalDataManager GetGlobalData() {
+            return (IGlobalDataManager)stateManager.GetDataManager();
+        }
+
+    }
+
+}
+

@@ -1,106 +1,278 @@
-# UNITY STATE ENGINE
+UNITY STATE ENGINE
+==================
 
-State machine implementing a state transition graph to use for a classic game scenes structure.<br>
+State machine implementing a state transition graph to use for a classic game scenes structure.
+
+(**TODO:** add more infos)
+
+Only state and data management system, no game is provided.
+
+Details about each element can be found in the [project's documentation](./docs/README.md).
+
+(TODO: REWRITE)
+Samples are provided(TODO: LINK SAMPLES - make other document?), allowing to use the engine straight away, either for testing/exploring, or to use as a base for a new game.
+
+This document describes how to create a basic game using the engine, based on the ... sample(TODO: LINK in 'code'?).
 
 
-# USING THE ENGINE
+# Usage
 
-## ADD THE ENGINE IN PROJECT
+The "*State Graph Engine*" project was built and tested in Unity 6.
 
-There are 2 ways to add the engine to a Unity project:<br>
+To use the engine, a number of steps are required:
+* Setup the [**Unity Project**](#project-setup)
+* Design the [**State Graphs**](#state-graphs)
+* Define the game [**Data**](#data)
+* Build the [**Graph Managers**](#graph-managers)
+* Create the [**States**](#states)
+* Prepare the game [**Levels**](#levels)
 
-1. Copy the content of the "Engine" directory to a new "StateEngine" folder in the "Assets" folder of the Unity project.<br>
 
-2. Run the script "set_links.bat" in "Examples" to create symbolic links to the engine (and thus not working with a copy)<br>
-  => This is useful if working with Git (...)<br>
-  ! - The script must be run with admin rights! (and is only for Windows - Linux script coming soon)<br>
+# Project Setup
 
-## USE THE ENGINE
+> **NOTE:** This will be changed when project becomes a package.
+
+The first step consists in creating a Unity project ready to use the engine:
+* Download the latest release (or clone the repository for latest changes).
+* Extract the downloaded repository to a temporary directory.
+* Create a new Unity project.\
+	Any type of project can be created depending on the desired game type. The state engine is independent of the project type.
+* Copy the `StateEngine` directory from the extracted repository to the project's `Assets` folder.
+* Set the scripts execution order.\
+	Some scripts need to be executed early at the start of the application for proper initializations.
+	This can be managed by changing the script execution order:
+	* Go to `Project Settings` -> `Script Execution Order`
+	* Add `GlobalManager` before `Default Time`
+	* Add `GameManager` before `Default Time` (just after `GlobalManager`)
+
+	![Project Settings - Script Execution Order](./docs/images/script_order.jpg "Script Execution Order")
+
+
+# State Graphs
+
+The game will contain 2 graphs: a global graph and a game graph.
+
+Graphs are defined in XML files.
+They can be created manually or by using the [unity-state-engine-graphview](https://github.com/2-REC/unity-state-engine-graphview) tool.
+
+
+## Global Graph
 
 ...
-How to use:<br>
+=> explain default global graph (xml)
+very basic graph, with minimal functionality.
+- menu
+- newgame
+- quit
 
-(TODO: OK HERE?)<br>
-- Implement "GlobalManager" & create a prefab
-- Set script order for "GlobalManager" before "default"!
-    <br>(to be sure it is executed before "StateController")
-- Implement "GameManager" & create a prefab
-- Set script order for "GameManager" before "default" (just after "GlobalManager")!
-    <br>(to be sure it is executed before "StateController")
-<br>?!-TODO: check:
-- Idem with "LevelManager" (StateController last derived level)
-    <br>(for version 2 => move below?)
+global_states.xml
+    eg in 'resources' folder
+    => at least 1 state, to start a new game, and to quit the graph/application
 
 
-- State graphs are defined in "<b>Resources/Xml/game_states.xml</b>" & "<b>Resources/Xml/global_states.xml</b>"<br>
-    => The files don't need to be modified, unless some specific states should be added or removed.<br>
+## Game Graph
 
-- The name of the different scenes can be set in the 2 graph files.<br>
-TODO: CHECK FOR LEVEL NAMES!
-    ! - Except for the level scenes, which must be "level_<nb>", where <nb> corresponds to the numbers used in the map scene.<br>
+...
+=> explain default game graph (xml)
 
-- For each state, a scene must be created, which satisfies:<br>
-    - Its name as defined in the corresponding state graph<br>
-    - It must contain a graph management object:<br>
-        - Create an empty object, eg: "StateManager"<br>
-        - Add a "GlobalManager" (script) with an attached "GlobalStateManager" prefab object<br>
-            => This object will be shared between all states as a unique instance.<br>
-TODO: WHY?!?
-            (Except for the "NewGame" scene, that doesn't need one)<br>
-        - Add a "GlobalStateControler" (script) and specify its corresponding state, or a script derived from "GlobalStateControler" with the corresponding state name (or param?)<br>
-TODO: OK?!
-            => This object is specific to each state.<br>
-        - A "Timer" (script) can be added (global or not depending on graph) if want the state to be left after a period of time<br>
-    - It must be added to the project build settings<br>
+game_states.xml
+    eg in 'resources' folder
+    => at least a level state...
+    if no map state: ...(setlevel, etc.)
 
-- The starting scene must be the one defined as first in the global state graph<br>
-    => The "Logo" scene if the graphs were not modified.<br>
+LEVEL
+SUCCESS
+FAILURE
+GAME_END
+GAME_OVER
+CONTINUE
+QUIT_GAME
 
-- The desired game data variables must be defined and used where needed:<br>
-    - "DifficultyData" & "Xml/values.xml": for fields depending on the difficulty level<br>
-    - SessionManager, GameData, etc.: getters and setters for fields to be used in game<br>
-    - Typical fields can be known (and potentially displayed) by specific states (by calling "GameData" getters):<br>
-        - "DebriefingFail": number of lives remaining<br>
-        - "GameOver": number of continues remaining (+points? ...)<br>
-        - "Debriefing": points?, ...<br>
-        - "Level": lives remaining, points, current life/energy, ...<br>
-    - Values need to be saved between levels in SessionManager (when win, lose, both, ...)<br>
-        - Values updated by calling GameData setters, and persisted by calling SessionManager setters<br>
-            => Decide which fields are saved persistently and in which case (win/lose/both).<br>
-    - ...TODO: continue...(?)<br>
+(no map state, directly in level state)
 
 
-Optional:
-(version 2):
-    - can add the "LevelManager" script (version 2), a "LevelController" script to the manager, and a "UI Canvas" prefab (containing a "HudController" script) to the scene, for generic game stuff (health, points, lives)<br>
-    - for testing purpose, the prefab object "UI Tests Canvas" can be added to the "UI Canvas" object (as child), and the "LevelManager" object instance must be set in the script public parameters. It will add 4 buttons for the following actions: win level, lose level, get hit, add points.<br>
+# Data
+
+(...?)
+(no global data...)
 
 
+## Game Data
 
-- in game states
-    - possibility to "load global" (to init the game data, loaded when coming from global graph)
-        <br>=> allowing to test a game state/scene without to start from global graph.
-<br>(TODO: check if put details here or leave in file...)
-        <br>"InitGame" script in "Tests/Game" (see script for use details).
+...
+=> explain default game data (xml)
 
+!!!!
+add health + points in StateEngine6_TEST
 
-# EXAMPLES
-
-## STATE ENGINE DEMO
-
-Unity project showcasing how to use the state engine in its most basic way.<br>
-It is the minimal implementation required in order to use the engine.<br>
-
-It can be used as a template for the creation of a new game.<br>
-
-Before using the Unity project, the engine must be added to the project.<br>
-Look at the section "Adding The Engine" for details.<br>
+- create data
+	xml file (game data)
+		eg in 'resources' folder
+		values.xml
+	scripts
+		eg in 'Scripts' folder
+		GlobalDataManager.cs
+		GameDataManager.cs
+	=> explain simple data
 
 
-## STATE ENGINE DEMO EXTENDED
+## Data Managers
 
-Unity project showcasing how to use the state engine.<br>
-It implements a game controller with basic game mechanics, such as points, health and a simple UI allowing to simulate game events.<br>
+script + prefabs (global + game)
 
-Before using the Unity project, the engine must be added to the project.<br>
-Look at the section "Adding The Engine" for details.<br>
+- create data managers
+	prefabs
+		eg in 'Prefabs' folder
+		GlobalDataManager
+		GameDataManager
+
+
+# Graph Managers
+
+...
+Build the 2 graph managers prefabs.
+Save the new prefabs in a new `Prefabs` folder for example.
+
+
+## Global Manager
+
+Create the Global Manager prefab:
+
+1. Create a **global data manager** prefab.
+	* Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
+	* Save the prefab . Name it `GlobalDataManager` for example.
+	* Delete the instantiated prefab in the *Hierarchy* panel.
+2. Create the **global graph manager** prefab:
+	* Instantiate the provided `GlobalManager` prefab.\
+		The prefab should already have a `GlobalStateManager` prefab set for its `Global State Manager` porperty, as well as a `GlobalStateController` script component attached to it.\
+		The `GlobalStateController` component in instantiated prefabs will be replaced by an overridden script for global states requiring specific actions or behavior.
+	* Set the `GlobalManager` prefab properties:
+		* Set the `GlobalDataManager` prefab for the `Global Data Manager` property (the prefab itself, **NOT** an instance).
+		* Set the `global_states` XML file for the `Global States Graph` property.
+		* Set the `values` XML file for the `Game Data` property.
+	* Save the prefab (as a variant), and delete it in the *Hierarchy* panel.
+
+	![Global Manager](./docs/images/globalmanager.jpg "Global Manager")
+
+
+## Game Manager
+
+Create the Game Manager prefab:
+
+1. Create a **game data manager** prefab.
+	* Either create an empty object and add a `GameDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
+	* Save the prefab. Name it `GameDataManager` for example.
+	* Delete the instantiated prefab in the *Hierarchy* panel.
+2. Optionally create a **global data manager** prefab from the script with the same name.
+	* Either create an empty object and add a `GlobalDataManager` script component, or drag and drop the script in the *Hierarchy* panel.
+	* Save the prefab. Name it `GlobalDataManager` for example.
+	* Delete the instantiated prefab in the *Hierarchy* panel.
+3. Create the **game graph manager** prefab:
+	* Instantiate the provided `GameManager` prefab.\
+		The prefab should already have a `GameStateManager` prefab set for its `Game State Manager` porperty, as well as a `GameStateController` script component attached to it.\
+		The `GameStateController` component in instantiated prefabs will be replaced by an overridden script for game states requiring specific actions or behavior.
+	* Set the `GameManager` prefab properties:
+		* Set the `GameDataManager` prefab for the `Game Data Manager` property (the prefab itself, **NOT** an instance).
+		* Optionally check the `Use Global Data Manager` checkbox and set the `GlobalDataManager` prefab for the `Global Data Manager` property.
+		* Set the `game_states` XML file for the `Game States Graph` property.
+		* Set the `values` XML file for the `Game Data` property.
+		* Set the `levels` XML file for the `Game Levels` property.[*]
+	* Save the prefab (as a variant), and delete it in the *Hierarchy* panel.
+
+	![Game Manager](./docs/images/gamemanager.jpg "Game Manager")
+
+[*]: The **level tree** is not yet defined at this point, so an empty file can be used (it will be edited later when [creating the levels](TODO: LINK LEVELS)).
+**TODO:** check if OK to have no level defined at runtime?
+
+
+# States
+
+TODO: might make more sense to make section for each state (+main split global/game))?
+
+- create states
+	=> for each state
+	- scene
+		(create, add graph manager, etc.)
+	(- state controller) => optional
+		scripts
+			global => override 'GlobalStateController'
+			game => override 'GameStateController'
+	- other specific resources/data...
+
+
+## Scenes
+
+- create scene with name + build settings (! - first one!)
+- instantiate graph manager
+- if necessary override state controller
+
+
+## State Controllers
+
+...
+
+
+### Global States
+
+...
+actions...
+
+
+### Game States
+
+...
+actions...
+
+
+# Levels
+
+- create levels (+ update XML)
+	- scenes (1 per level or shared)
+	- whatever the game requires...
+
+## Level Tree
+
+...
+- create level tree
+	xml file
+		eg in 'resources' folder
+		levels.xml
+	=> can be completed later (as probably don't know all levels yet), but should at least already provide an empty file (easier for later, simply edit the file).
+	=> show basic tree (3 levels) (as in StateEngine6_TEST)
+
+TODO: change example?
+levels.xml:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<levels>
+	<level id="1" name="Level 1" scene="Level1" startup="true">
+		<data
+			beginAnim="..."
+			endAnim="..."
+			test="testvalue"
+		/>
+		<nextLevels>
+			<nextLevel id="2"/>
+		</nextLevels>
+	</level>
+	<level id="2" name="Level 2" scene="Level2">
+		<nextLevels>
+			<nextLevel id="3"/>
+		</nextLevels>
+	</level>
+	<level id="3" name="Level 3" scene="Level3"/>
+</levels>
+
+```
+
+
+## Level Controller
+
+... (shared)
+
+
+## Level Scenes
+
+...
+1 per level
+(can make template, with instanced game graph manager and level controller - overridden state controller)

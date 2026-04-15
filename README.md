@@ -1,3 +1,9 @@
+==THIS VERSION IS OBSOLETE - USE https://github.com/2-REC/unity-state-engine-basic==
+
++ replace this with newer inwork version ("ADDITIVE")
+
+---
+
 UNITY STATE ENGINE
 ==================
 
